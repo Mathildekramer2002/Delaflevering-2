@@ -50,3 +50,25 @@ Efter ændringen testede jeg hele bookingflowet fra valg af café til afsluttet 
 ## Kommende optimeringer
 
 Her dokumenterer jeg løbende de næste ændringer og resultater fra mine tests.
+
+## Billedoptimering
+
+### Førmåling
+
+Inden billedoptimeringen blev der udført en Lighthouse Performance-test på mobil for at have et udgangspunkt, som resultatet efter optimeringen kan sammenlignes med.
+
+Testen viste:
+- Performance: 76
+- First Contentful Paint (FCP): 0,9 sek.
+- Largest Contentful Paint (LCP): 5,1 sek.
+- Total Blocking Time (TBT): 0 ms
+- Cumulative Layout Shift (CLS): 0,133
+- Samlet network payload: 7.424 KiB
+
+Lighthouse viste desuden et optimeringspotentiale under "Improve image delivery" med en estimeret besparelse på 2.788 KiB.
+
+![Lighthouse før billedoptimering](dokumentation/lighthouse-performance-foer.png)
+
+![Lighthouse før billedoptimering](dokumentation/lighthouse-billeder-foer.png)
+
+På baggrund af målingen optimeres billederne, hvorefter den samme Lighthouse-test udføres igen for at undersøge effekten.
