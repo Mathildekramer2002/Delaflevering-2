@@ -95,3 +95,39 @@ Resultatet efter ændringen:
 ![Lighthouse efter billederne er flyttet ](dokumentation/lighthouse-lokal-hosting-efter.png)
 
 Målingen viser fortsat et optimeringspotentiale for billederne. Næste trin er derfor at optimere billedernes dimensioner og filstørrelse.
+
+### Optimering af billedstørrelser
+
+Efter spilbillederne var flyttet lokalt, blev deres dimensioner undersøgt. Flere af billederne var over 1000 px, selvom de bliver vist væsentligt mindre på siden.
+
+Billederne var allerede i WebP-format, så det var ikke nødvendigt at konvertere dem. I stedet har jeg reduceret de billeder, der var større end 800 px, til maksimalt 800 px. Billederne er gemt med en kvalitet på 80 % for at reducere filstørrelsen uden at forringe kvaliteten for meget.
+
+Efter ændringen blev Lighthouse-testen gentaget. Her viste "Improve image delivery" en estimeret besparelse på 791 KiB. Det er en tydelig reduktion sammenlignet med førmålingen, hvor den estimerede besparelse var 2.788 KiB.
+
+Performance-scoren blev dog ikke forbedret og lå efter ændringen på 71. Selvom billedoptimeringen har reduceret den estimerede besparelse under "Improve image delivery", kan der altså endnu ikke ses en forbedring i den samlede Performance-score. Performance påvirkes også af andre forhold på siden, som undersøges senere.
+
+![Lighthouse efter optimering af spilbilleder](dokumentation/optimering-efter.png)
+
+### Optimering af logo
+
+Lighthouse viste efterfølgende, at logoet stadig havde et stort optimeringspotentiale. Logoet blev hentet fra en ekstern Squarespace-adresse og havde oprindeligt dimensionerne 2500 × 1892 px.
+
+Jeg har derfor flyttet logoet til projektets egen `images`-mappe, reduceret dimensionerne og gemt det som WebP. Logoet blev efterfølgende komprimeret fra ca. 68 KB til 17 KB.
+
+Efter optimeringen blev Lighthouse-testen gentaget. "Improve image delivery" blev reduceret fra 588 KiB til 537 KiB, og logoet fremgår ikke længere som et billede med optimeringspotentiale.
+
+![Lighthouse før optimering af logo](dokumentation/logo-før.png)
+![Lighthouse efter optimering af logo](dokumentation/logo-efter.png)
+
+Der er stadig et optimeringspotentiale på 537 KiB for spilbillederne. Lighthouse viser blandt andet, at nogle af billederne bliver hentet i større dimensioner, end de bliver vist i. Derfor undersøges responsive billeder som næste del af billedoptimeringen.
+
+
+Som en del af optimeringen blev billeder over 800 px reduceret til maksimalt 800 px. Tabellen viser eksempler på, hvordan dette har påvirket billedernes dimensioner og filstørrelse:
+
+| Billede | Før dimensioner | Efter dimensioner | Før filstørrelse | Efter filstørrelse |
+|---|---:|---:|---:|---:|
+| Catan | 1533 × 1533 px | 800 × 800 px | 525 KB | 64,6 KB |
+| Cluedo | 1122 × 1122 px | 800 × 800 px | 380 KB | 84,6 KB |
+| Exploding Kittens | 1116 × 1116 px | 800 × 800 px | 300 KB | 47,8 KB |
+| Carcassonne | 1069 × 1068 px | 800 × 800 px | 259 KB | 58,0 KB |
+| Azul | 1000 × 1000 px | 800 × 800 px | 312 KB | 84,1 KB |
