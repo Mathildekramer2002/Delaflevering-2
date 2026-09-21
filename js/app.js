@@ -337,6 +337,7 @@ function render() {
 }
 
 function gameCard(g) {
+  const imageName = g.image.split("/").pop();
   const favActive = FAVS.has(String(g.id)) ? "active" : "";
   const players = g.players ? `${g.players.min}–${g.players.max}` : "—";
   const rating = Number.isFinite(g.rating) ? g.rating.toFixed(1) : "—";
@@ -345,9 +346,7 @@ function gameCard(g) {
   return `
    <article class="card" data-id="${g.id}">
      <div class="thumb">
-       <img src="${g.image}" alt="${escapeHtml(
-    g.title
-  )}" style="object-fit:contain;">
+       <img src="images/games/${imageName}" alt="${escapeHtml(g.title)}" style="object-fit:contain;">
        <div class="badges">${badgeAvail}</div>
        <button class="fav ${favActive}" data-fav-id="${
     g.id

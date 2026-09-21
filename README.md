@@ -72,3 +72,26 @@ Lighthouse viste desuden et optimeringspotentiale under "Improve image delivery"
 ![Lighthouse før billedoptimering](dokumentation/lighthouse-billeder-foer.png)
 
 På baggrund af målingen optimeres billederne, hvorefter den samme Lighthouse-test udføres igen for at undersøge effekten.
+
+### Flytning af spilbilleder
+
+I den oprindelige løsning blev spilbillederne hentet fra en ekstern GitHub-kilde. I forbindelse med billedoptimeringen har jeg flyttet billederne til projektets egen `images/games`-mappe og ændret JavaScript-koden, så appen anvender de lokale filer.
+
+Billederne flyttes allerede på dette tidspunkt, fordi de efterfølgende skal optimeres i forhold til blandt andet dimensioner og filstørrelse. Det giver mulighed for at arbejde direkte med billedfilerne i projektet og undgår, at de senere skal flyttes igen.
+
+Flytningen hænger samtidig sammen med en anbefaling fra auditten om at flytte spilbillederne til projektets egen hosting som en del af arbejdet med caching. Selve caching-optimeringen behandles dog først senere.
+
+Efter ændringen kontrollerede jeg i DevTools, at spilbillederne blev hentet fra projektets lokale mappe. Herefter blev Lighthouse Performance-testen gentaget.
+
+Resultatet efter ændringen:
+- Performance: 73
+- First Contentful Paint (FCP): 0,9 sek.
+- Largest Contentful Paint (LCP): 6,1 sek.
+- Total Blocking Time (TBT): 0 ms
+- Cumulative Layout Shift (CLS): 0,133
+- Speed Index: 0,9 sek.
+- Estimeret besparelse under "Improve image delivery": 2.788 KiB
+
+![Lighthouse efter billederne er flyttet ](dokumentation/lighthouse-lokal-hosting-efter.png)
+
+Målingen viser fortsat et optimeringspotentiale for billederne. Næste trin er derfor at optimere billedernes dimensioner og filstørrelse.
