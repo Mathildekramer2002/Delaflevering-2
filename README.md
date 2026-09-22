@@ -131,3 +131,63 @@ Som en del af optimeringen blev billeder over 800 px reduceret til maksimalt 800
 | Exploding Kittens | 1116 × 1116 px | 800 × 800 px | 300 KB | 47,8 KB |
 | Carcassonne | 1069 × 1068 px | 800 × 800 px | 259 KB | 58,0 KB |
 | Azul | 1000 × 1000 px | 800 × 800 px | 312 KB | 84,1 KB |
+
+
+### Responsive spilbilleder
+
+Efter den første billedoptimering viste Lighthouse fortsat, at flere af spilbillederne var større end nødvendigt i forhold til den størrelse, de blev vist i. Samtidig havde jeg i den tidligere audit fundet, at spiloversigten på mobil med fordel kunne vises i to kolonner i stedet for én. Jeg ændrede derfor layoutet til to kolonner på mindre skærme.
+
+Jeg testede efterfølgende layoutet manuelt ved forskellige skærmbredder. Ved 390 px vises spilkortene i to kolonner, så der kan vises flere spil på skærmen ad gangen.
+
+![Responsiv visning ved 390 px](dokumentation/responsive-390px.png)
+
+*Manuel test af spiloversigten ved en skærmbredde på 390 px.*
+
+Layoutet blev også testet ved 320 px for at undersøge, om de to kolonner fortsat fungerede på en mindre skærm. Her bevares de to kolonner, og billederne tilpasser sig fortsat kortenes størrelse.
+
+![Responsiv visning ved 320 px](dokumentation/responsive-320px.png)
+
+*Manuel test ved 320 px, hvor spilkortene fortsat vises i to kolonner.*
+
+Lighthouse viste, at spilbillederne blev vist i forskellige størrelser afhængigt af skærmstørrelsen. På mobil blev billederne vist omkring 252 × 252 px, mens de på større skærme blev vist omkring 403 × 403 px. Jeg lavede derfor to versioner af hvert spilbillede på ca. 252 × 252 px og 403 × 403 px.
+
+I koden anvendes `<picture>` med et breakpoint ved 600 px, så den mindre billedfil indlæses på små skærme, mens den større version bruges på større skærme. På den måde tilpasses både layoutet og den indlæste billedfil til skærmstørrelsen.
+
+Filnavnet til billederne dannes dynamisk ud fra det oprindelige billednavn:
+
+```js
+const imageName = g.image.split("/").pop();
+const imageBase = imageName.replace(".webp", "");
+```
+
+Herefter bruges `imageBase` i `<picture>`, så den samme løsning automatisk kan bruges på alle spilkort:
+
+```html
+<picture>
+  <source
+    media="(max-width: 600px)"
+    srcset="images/games/${imageBase}-200.webp"
+  >
+  <img
+    src="images/games/${imageBase}-400.webp"
+    alt="${escapeHtml(g.title)}"
+    style="object-fit:contain;"
+  >
+</picture>
+```
+
+På skærme op til 600 px indlæses `-200.webp`-versionen, mens `-400.webp`-versionen bruges på større skærme. Filnavnene bruges til at skelne mellem de to versioner, mens billedernes faktiske dimensioner er ca. 252 × 252 px og 403 × 403 px.
+
+Efter ændringen blev Lighthouse-testen gentaget. Det estimerede optimeringspotentiale under "Improve image delivery" blev reduceret fra 791 KiB efter den tidligere billedoptimering til 81 KiB.
+
+![Lighthouse efter responsive billeder](dokumentation/responsive-billeder-efter.png)
+
+*Efter implementeringen af responsive billeder er det estimerede optimeringspotentiale reduceret til 81 KiB. De resterende forslag handler primært om yderligere komprimering.*
+
+De resterende forslag fra Lighthouse handler ikke længere om, at spilbilledernes dimensioner er for store, men primært om yderligere komprimering. Jeg har valgt ikke at komprimere billederne yderligere på nuværende tidspunkt, da jeg også ønsker at bevare en passende billedkvalitet.
+
+Den samlede Performance-score blev også målt igen på mobil. I den oprindelige førmåling var scoren 76, mens den efter billedoptimeringerne blev målt til 80. Billedoptimeringen har dermed bidraget til en forbedret performance, da der nu indlæses væsentligt mindre billeddata. Samtidig blev optimeringspotentialet under "Improve image delivery" reduceret fra 2.788 KiB i den oprindelige måling til 81 KiB. Lighthouse-resultater kan variere mellem målinger, og derfor bruges scoren sammen med de konkrete målinger af billeddata til at vurdere effekten.
+
+![Lighthouse Performance efter responsive billeder](dokumentation/lighthouse-responsive-billeder-efter.png)
+
+*Mobilmåling efter optimeringerne med en Performance-score på 80.*
