@@ -191,3 +191,46 @@ Den samlede Performance-score blev også målt igen på mobil. I den oprindelige
 ![Lighthouse Performance efter responsive billeder](dokumentation/lighthouse-responsive-billeder-efter.png)
 
 *Mobilmåling efter optimeringerne med en Performance-score på 80.*
+
+
+### Tydelig fokusmarkering
+
+Keyboard-testen fra delaflevering 1 viste, at det flere steder var uklart, hvilket element der havde fokus ved tastaturnavigation. Det gjaldt blandt andet søgefeltet, sorteringsknapperne og bundnavigationen.
+
+![Keyboard-test før optimering](dokumentation/keyboard-test.png)
+
+*Figur: Keyboard-test fra delaflevering 1, som viser problemer med blandt andet manglende eller utydelig fokusmarkering.*
+
+#### Optimering
+
+For at gøre det tydeligere, hvor brugeren befinder sig ved navigation med tastatur, er der tilføjet en ensartet rød, stiplet fokusmarkering på interaktive elementer.
+
+Søgefeltet får fokusmarkering omkring hele søgeboksen, mens knapper og andre interaktive elementer får markeringen omkring selve elementet.
+
+Fokusmarkeringen er testet med både Tab og Shift + Tab.
+
+![Fokusmarkering på søgefelt](dokumentation/fokus-sogefelt.png)
+
+*Figur: Den nye fokusmarkering omkring søgefeltet ved tastaturnavigation.*
+
+![Fokusmarkering på bundnavigation](dokumentation/fokus-bundnavigation.png)
+
+*Figur: Den nye fokusmarkering i bundnavigationen ved tastaturnavigation.*
+
+#### Filter- og sorteringsområdet
+
+Ved test af den nye fokusmarkering blev det observeret, at dele af markeringen omkring filterknapperne blev skjult, fordi knapperne lå tæt sammen.
+
+Sortering og filtrering blev samtidig adskilt tydeligere. De tre tidligere sorteringsknapper blev samlet i én "Sorter efter"-dropdown, som blev placeret ved siden af "Ryd filtre". Afstanden og luften omkring knapperne blev desuden øget, så fokusmarkeringen ikke længere bliver skjult.
+
+Efter ændringerne blev området igen testet med Tab og Shift + Tab. Fokusmarkeringen er nu tydelig på både filterknapperne, "Sorter efter" og "Ryd filtre".
+
+![Fokusmarkering på filter](dokumentation/filter-fokus-efter.png)
+
+*Figur: Fokusmarkering på filter- og sorteringsområdet efter ændringen af strukturen.*
+
+#### Videre test
+
+Spillekortene kan på nuværende tidspunkt ikke modtage tastaturfokus. Dette var også et fund i den oprindelige keyboard-test og optimeres derfor separat.
+
+Når de resterende problemer med tastaturbetjening er optimeret, gentages keyboard-testen fra delaflevering 1. Resultatet bruges til at sammenligne tastaturbetjeningen før og efter optimeringen.

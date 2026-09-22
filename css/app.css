@@ -128,10 +128,19 @@ body {
   flex: 1 1 auto;
   min-width: 0;
   display: flex;
-  gap: 8px;
+  gap: 12px;
   overflow-x: auto;
   overflow-y: visible;
-  padding-bottom: 4px;
+  padding: 10px; 
+}
+
+/* Holder sortering og ryd filtre ved siden af hinanden */
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  padding: 10px;
 }
 
 /* Standard “pill”-stil (bruges også i dropdown-trigger-knapper) */
@@ -160,10 +169,6 @@ body {
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
 }
 
-.pill:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.6);
-  outline-offset: 2px;
-}
 
 /* Dropdown trigger-pills lys stil */
 .filter-dropdown {
@@ -438,11 +443,6 @@ body {
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
 }
 
-/* Tilgængelighed – undgå grimme outlines men behold fokus */
-.tabbar button:focus-visible {
-  outline: 2px solid rgba(59, 33, 24, 0.35);
-  outline-offset: 2px;
-}
 
 /* Sørg for at modaler fortsat ligger OVER tabbaren */
 .modal {
@@ -608,4 +608,18 @@ body {
   .tabbar button {
     transition: none !important;
   }
+}
+
+/* Fokusmarkering på knapper og andre elementer, der kan modtage tastaturfokus.
+   Gælder bl.a. filterknapper, sorteringsknapper, favorithjerter og bundnavigation. */
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px dashed #e00000;
+  outline-offset: 4px;
+}
+
+/* Fokusmarkering omkring søgeboksen, når brugeren navigerer ind i søgefeltet. */
+.searchbar:focus-within {
+  outline: 3px dashed #e00000;
+  outline-offset: 4px;
 }

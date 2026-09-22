@@ -13,15 +13,14 @@
     />
   </head>
   <body>
-   <header> 
-
     <header class="topbar">
       <!-- Øverste mørkebrune bjælke -->
       <div class="topbar-bar"></div>
-
-  <img src="images/logo.webp" alt="Spilcaféen logo" class="header-logo" />
-
-   </header>
+        <img src="images/logo.webp" 
+        alt="Spilcaféen logo" 
+        class="header-logo" 
+      />
+    </header>
    
 
     <!-- BOOKING FLOW (skjult indtil man trykker "Reserver bord") -->
@@ -91,13 +90,27 @@
           </div>
         </div>
   
-        <div class="filter-dropdown"><button class="pill" data-sort="rating">Populære</button></div>
-        <div class="filter-dropdown"><button class="pill" data-sort="title">A–Å</button></div>
-        <div class="filter-dropdown"><button class="pill" data-sort="none">Nyeste</button></div>
       </div>
   
-      <!-- højre side -->
-      <button class="clear-pill" id="clear-filters-pill" type="button">Ryd filtre</button>
+      <!-- Sortering og nulstilling af filtre -->
+      <div class="filter-actions">
+        <div class="filter-dropdown sort-dropdown">
+          <button class="pill" id="sort-button" type="button">
+            Sorter efter ⌄
+          </button>
+    
+          <div class="dropdown-menu">
+            <button data-sort-value="rating">Populære</button>
+            <button data-sort-value="title">A–Å</button>
+            <button data-sort-value="none">Nyeste</button>
+          </div>
+        </div>
+    
+        <button class="clear-pill" id="clear-filters-pill" type="button">
+          Ryd filtre
+        </button>
+        
+      </div>
     </div>
   
     <!-- resten af indholdet -->
@@ -137,13 +150,7 @@
         <button id="clear-filters" type="button">Ryd (skjult)</button>
       </div>
 
-      </details>
 
-      <!-- Grid med spil -->
-      <section id="game-list" class="card-grid"></section>
-    </main>
-
-<!-- Modal: stort kort -->
 <!-- Modal: stort kort -->
 <div id="game-modal" class="modal" hidden>
   <div class="modal-backdrop" data-close></div>

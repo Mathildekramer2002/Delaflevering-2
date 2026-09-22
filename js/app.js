@@ -227,8 +227,12 @@ function clearAllFilters() {
     const el = document.getElementById(id);
     if (el) el.value = "";
   });
+
   if (els.availableOnly) els.availableOnly.checked = false;
   if (els.sort) els.sort.value = "none";
+
+  const sortButton = document.getElementById("sort-button");
+  if (sortButton) sortButton.textContent = "Sorter efter ⌄";
 
   // Vis alle igen (fjern fav-filter)
   SHOW_FAVS = false;
@@ -479,7 +483,7 @@ document.addEventListener("keydown", (e) => {
 // TOP-FILTERS (dropdown-pills)
 
 function setupDropdownFilters() {
-  const row = document.querySelector(".filters-row");
+  const row = document.querySelector(".filterbar");
   let openDD = null;
   let floatingMenu = null;
 
@@ -564,34 +568,54 @@ function setupDropdownFilters() {
     openDD = null;
   }
 
-  // Åbn/luk dropdown (ikke sort)
-  row?.addEventListener("pointerdown", (e) => {
-    const pill = e.target.closest(".filter-dropdown .pill:not([data-sort])");
-    if (!pill) return;
-    e.preventDefault();
-    e.stopPropagation();
-    const dd = pill.closest(".filter-dropdown");
-    if (openDD === dd) closeDropdown();
-    else openDropdown(dd, pill);
-  });
+  // Åbn/luk dropdowns
+row?.addEventListener("pointerdown", (e) => {
+  const pill = e.target.closest(".filter-dropdown .pill");
+  if (!pill) return;
 
-  // Sorteringsknapper
-  row?.addEventListener("click", (e) => {
-    const sorter = e.target.closest(".filter-dropdown .pill[data-sort]");
-    if (!sorter) return;
-    if (els.sort) els.sort.value = sorter.dataset.sort || "none";
-    render();
-  });
+  e.preventDefault();
+  e.stopPropagation();
+
+  const dd = pill.closest(".filter-dropdown");
+
+  if (openDD === dd) {
+    closeDropdown();
+  } else {
+    openDropdown(dd, pill);
+  }
+});
 
   // Klik på menupunkt
-  document.addEventListener("click", (e) => {
-    const item = e.target.closest(".dropdown-menu button");
-    if (!item) return;
-    const ok = setFilter(item.dataset.filter, item.dataset.value);
-    if (ok) render();
+document.addEventListener("click", (e) => {
+  const item = e.target.closest(".dropdown-menu button");
+  if (!item) return;
+
+  // Sortering
+  if (item.dataset.sortValue) {
+    if (els.sort) {
+      els.sort.value = item.dataset.sortValue;
+    }
+
+    // Vis den valgte sortering på knappen
+    const sortButton = document.getElementById("sort-button");
+    if (sortButton) {
+      sortButton.textContent = `${item.textContent} ⌄`;
+    }
+
+    render();
     closeDropdown();
     e.stopPropagation();
-  });
+    return;
+  }
+
+  // Filtrering
+  const ok = setFilter(item.dataset.filter, item.dataset.value);
+
+  if (ok) render();
+
+  closeDropdown();
+  e.stopPropagation();
+});
 
   // Klik udenfor lukker
   document.addEventListener("pointerdown", (e) => {
