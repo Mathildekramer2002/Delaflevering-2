@@ -234,3 +234,30 @@ Efter ændringerne blev området igen testet med Tab og Shift + Tab. Fokusmarker
 Spillekortene kan på nuværende tidspunkt ikke modtage tastaturfokus. Dette var også et fund i den oprindelige keyboard-test og optimeres derfor separat.
 
 Når de resterende problemer med tastaturbetjening er optimeret, gentages keyboard-testen fra delaflevering 1. Resultatet bruges til at sammenligne tastaturbetjeningen før og efter optimeringen.
+
+### Søgefelt og lup-ikon
+
+Keyboard-testen fra delaflevering 1 viste, at lup-ikonet i søgefeltet kunne modtage tastaturfokus, selvom det ikke havde nogen funktion. Det gav et unødvendigt stop ved navigation med Tab.
+
+Lup-ikonet var opbygget som en knap, men er nu ændret til et dekorativt element, så det ikke længere indgår i Tab-rækkefølgen. Ikonet er samtidig udskiftet med et mørkt PNG-ikon.
+
+```html
+<div class="searchbar">
+      <input type="text" id="search-input" placeholder="Søg" />
+        <span class="icon-btn" aria-hidden="true">
+          <img src="images/lup.png" alt="">
+        </span>
+    </div>
+```
+
+Efter ændringen er søgefeltet testet med tastatur, hvor fokus nu går direkte videre fra søgefeltet til næste interaktive element. WAVE registrerer heller ikke længere en kontrastfejl på lup-ikonet.
+
+![Ingen kontrastfejl ved luppen](dokumentation/kontrast-lup-1.png)
+
+*Figur: WAVE efter ændringen af lup-ikonet, hvor der ikke længere registreres en kontrastfejl ved ikonet.*
+
+![Kun en kontrastfejl](dokumentation/kontrast-lup-2.png)
+
+*Figur: WAVE registrerer efter ændringen én kontrastfejl på siden mod tidligere to.*
+
+
