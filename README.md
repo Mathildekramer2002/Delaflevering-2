@@ -260,4 +260,36 @@ Efter ændringen er søgefeltet testet med tastatur, hvor fokus nu går direkte 
 
 *Figur: WAVE registrerer efter ændringen én kontrastfejl på siden mod tidligere to.*
 
+### Tastaturbetjening af spillekort og modal
 
+Keyboard-testen fra delaflevering 1 viste, at spillekortene ikke kunne modtage fokus eller åbnes med tastatur. Det betød, at en bruger, der navigerer med tastatur, ikke kunne åbne spillene og få adgang til informationerne i modalvinduet.
+
+#### Optimering
+
+Spillekortene er gjort fokusérbare ved hjælp af `tabindex="0"`. Der er samtidig tilføjet en keyboard-event i JavaScript, så et kort kan åbnes med Enter, når selve kortet har fokus.
+
+Favoritknappen ligger inde i spillekortet og kan også modtage tastaturfokus. Derfor er keyboard-eventen afgrænset til selve kortet, så Enter på favoritknappen kun aktiverer favoritten og ikke samtidig åbner spillet.
+
+![Fokus på spillekort](dokumentation/modal-kort-fokus.png)
+
+*Figur: Spillekortet kan efter optimeringen modtage en tydelig fokusmarkering ved navigation med tastatur.*
+
+#### Fokus i modalvinduet
+
+Da spillekortene kunne åbnes med Enter, blev det efterfølgende testet, hvordan fokus fungerede i modalvinduet. Her fortsatte fokus i første omgang videre til elementerne på siden bag modalvinduet.
+
+Fokusstyringen er derfor ændret, så fokus automatisk flyttes til luk-knappen, når et spil åbnes. Herfra kan brugeren navigere videre med Tab til "Regler", som kan åbnes med Enter. Tab og Shift + Tab holder fokus mellem luk-knappen og "Regler", så brugeren ikke kommer til at navigere på siden bag modalvinduet.
+
+![Fokus på luk-knap i modal](dokumentation/modal-luk-fokus.png)
+
+*Figur: Når et spillekort åbnes med Enter, flyttes tastaturfokus automatisk til luk-knappen i modalvinduet.*
+
+![Fokus på Regler](dokumentation/modal-regler-fokus.png)
+
+*Figur: Med Tab kan fokus flyttes fra luk-knappen til "Regler", som kan åbnes med Enter.*
+
+Modalvinduet kan desuden lukkes med Escape. Når det lukkes, flyttes fokus tilbage til det spillekort, som brugeren åbnede. Brugeren kan dermed fortsætte sin tastaturnavigation fra samme sted.
+
+#### Test
+
+Efter optimeringen er funktionen testet med Tab, Shift + Tab, Enter og Escape. Testen viste, at spillekortene nu kan åbnes med tastatur, "Regler" kan åbnes med Enter, fokus holdes inde i modalvinduet, og fokus returnerer til det valgte spillekort efter lukning.

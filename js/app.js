@@ -75,6 +75,9 @@ let GAMES = [];
 let SHOW_FAVS = false;
 let FAVS = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"));
 
+// Gemmer det element der havde fokus, inden en modal åbnes, så fokus kan sendes tilbage til samme sted, når modalen lukkes.
+let lastFocusedElement = null;
+
 // INIT
 
 init();
@@ -164,6 +167,19 @@ function bindEvents() {
     setActiveTab(els.tabAll);
     render();
   });
+
+  // Gør det muligt at åbne et spillekort med Enter, når selve kortet har fokus.
+  // e.target === card gør, at Enter på favorit-hjertet ikke også åbner spillet.
+
+ els.list.addEventListener("keydown", (e) => {
+  const card = e.target.closest(".card[data-id]");
+
+  if (card && e.target === card && e.key === "Enter") {
+    e.preventDefault();
+    e.stopPropagation();
+    openModalById(card.dataset.id);
+  }
+});
 
   els.tabFav?.addEventListener("click", () => {
     SHOW_FAVS = true;
@@ -340,16 +356,18 @@ function render() {
   updateBackIcon();
 }
 
-function gameCard(g) {
-  const imageName = g.image.split("/").pop();
-  const imageBase = imageName.replace(".webp", "");
-  const favActive = FAVS.has(String(g.id)) ? "active" : "";
-  const players = g.players ? `${g.players.min}–${g.players.max}` : "—";
-  const rating = Number.isFinite(g.rating) ? g.rating.toFixed(1) : "—";
-  const badgeAvail = g.available ? `<span class="badge">Ledig</span>` : ``;
+// Opretter spillekortene.
+// tabindex="0" gør, at selve kortet kan få fokus ved navigation med tastatur.
+  function gameCard(g) {
+    const imageName = g.image.split("/").pop();
+    const imageBase = imageName.replace(".webp", "");
+    const favActive = FAVS.has(String(g.id)) ? "active" : "";
+    const players = g.players ? `${g.players.min}–${g.players.max}` : "—";
+    const rating = Number.isFinite(g.rating) ? g.rating.toFixed(1) : "—";
+    const badgeAvail = g.available ? `<span class="badge">Ledig</span>` : ``;
 
-  return `
-   <article class="card" data-id="${g.id}">
+    return `
+    <article class="card" data-id="${g.id}" tabindex="0">
      <div class="thumb">
        <picture>
   <source
@@ -413,6 +431,8 @@ function updateFavTabCounter() {
 function openModalById(id) {
   const g = GAMES.find((x) => String(x.id) === String(id));
   if (!g || !modal) return;
+  // Gemmer det kort brugeren står på, så fokus kan komme tilbage hertil bagefter.
+  lastFocusedElement = document.activeElement;
 
   // Billede
   mImg.src = g.image;
@@ -452,6 +472,11 @@ function openModalById(id) {
   modal.hidden = false;
   document.body.style.overflow = "hidden";
   updateBackIcon();
+
+  // Flytter fokus til luk-knappen, når modalen er blevet vist.
+  requestAnimationFrame(() => {
+  modal.querySelector(".modal-close").focus();
+});
 }
 
 function closeModal() {
@@ -459,6 +484,8 @@ function closeModal() {
   modal.hidden = true;
   document.body.style.overflow = "";
   updateBackIcon();
+  // Sender fokus tilbage til det kort, som brugeren åbnede modalvinduet fra.
+  lastFocusedElement?.focus();
 }
 
 // Regler-toggle
@@ -476,8 +503,31 @@ modal?.addEventListener("click", (e) => {
     closeModal();
   }
 });
+
+
+// Tastaturstyring i modalvinduet.
+// Escape lukker modalen, og Tab/Shift + Tab holder fokus mellem
+// luk-knappen og Regler, så fokus ikke fortsætter til siden bagved.
+
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && modal && modal.hidden === false) closeModal();
+  if (!modal || modal.hidden) return;
+
+  if (e.key === "Escape") {
+    closeModal();
+    return;
+  }
+
+  if (e.key === "Tab") {
+    const closeBtn = modal.querySelector(".modal-close");
+
+    if (e.shiftKey && document.activeElement === closeBtn) {
+      e.preventDefault();
+      rulesBtn.focus();
+    } else if (!e.shiftKey && document.activeElement === rulesBtn) {
+      e.preventDefault();
+      closeBtn.focus();
+    }
+  }
 });
 
 // TOP-FILTERS (dropdown-pills)
