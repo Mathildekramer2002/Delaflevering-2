@@ -377,3 +377,27 @@ Efter optimeringen er Kategori, Spillere, Alder og Varighed testet med Tab, Shif
 Testen viste, at alle fire dropdown-menuer nu kan åbnes og lukkes med tastatur. Brugeren kan navigere mellem valgmulighederne med Tab og Shift + Tab, og fokus bliver i den åbne dropdown, indtil brugeren vælger en mulighed eller lukker menuen.
 
 Ved valg af en mulighed returnerer fokus til den tilhørende filterknap, så brugeren kan fortsætte tastaturnavigationen fra samme sted.
+
+### Tastaturbetjening af booking og favoritter
+
+Efter optimeringen af spillekort, dropdown-menuer og modalvindue blev tastaturnavigationen testet på de øvrige dele af løsningen.
+
+På bookingsiden kunne caféerne i første omgang ikke modtage tastaturfokus, da de var opbygget som klikbare kort. Café-kortene blev derfor gjort fokusérbare og kan nu vælges med Enter.
+
+Når bookingflowet åbnes fra bundnavigationen, flyttes fokus automatisk til den første café. Herfra kan brugeren fortsætte gennem bookingflowet med tastaturet og vælge blandt andet antal gæster, dato, tidspunkt og bookingtype.
+
+Ved testen blev der samtidig fundet en fejl i bundnavigationen, hvor Favoritter ikke lukkede bookingvisningen. Navigationen blev derfor rettet, så brugeren kan skifte mellem de forskellige visninger med både mus og tastatur.
+
+Favoritsiden anvender de samme fokusérbare spillekort som den almindelige spiloversigt og kan derfor også navigeres med tastatur.
+
+![Tastaturfokus i booking](dokumentation/booking-tastatur.png)
+
+*Figur: Fokus flyttes til den første café, når bookingflowet åbnes med tastatur.*
+
+### Keyboard-test efter optimering
+
+Efter de enkelte ændringer blev keyboard-testen fra delaflevering 1 gentaget. Formålet var at undersøge, om de tidligere fundne problemer var blevet løst, og om løsningens centrale funktioner kunne gennemføres uden brug af mus.
+
+![Ny keyboard test](dokumentation/keyboard-test-efter.png)
+
+Testen viste, at de centrale funktioner, som tidligere gav problemer ved tastaturnavigation, nu kan betjenes uden brug af mus.

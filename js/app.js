@@ -182,6 +182,9 @@ function bindEvents() {
 });
 
   els.tabFav?.addEventListener("click", () => {
+    // Lukker bookingvisningen, hvis brugeren går direkte til favoritter.
+    if (!bookingView?.hidden) closeBooking();
+
     SHOW_FAVS = true;
     setActiveTab(els.tabFav);
     render();

@@ -59,6 +59,11 @@ function openBooking() {
       booking.step = 1;
       renderBooking();
 
+      // Flytter fokus til den første café, når bookingflowet åbnes.
+requestAnimationFrame(() => {
+  bookingStage.querySelector("[data-cafe]")?.focus();
+});
+
       document
         .querySelectorAll(".tabbar .tab")
         .forEach((t) => t.classList.remove("active"));
@@ -114,7 +119,7 @@ function renderStepCafe() {
    <div class="booking-grid booking-cafes">
      ${CAFES.map(
        (c) => `
-       <article class="booking-card" data-cafe="${c.id}">
+<article class="booking-card" data-cafe="${c.id}" tabindex="0">
          <img src="${c.img}" alt="${c.name}">
          <h4>${c.name}</h4>
          <p>${c.address}</p>
@@ -123,13 +128,24 @@ function renderStepCafe() {
      ).join("")}
    </div>
  `;
-  bookingStage.querySelectorAll("[data-cafe]").forEach((card) => {
-    card.addEventListener("click", () => {
-      booking.cafe = CAFES.find((c) => c.id === card.dataset.cafe);
-      booking.step = 2;
-      renderBooking();
-    });
+ bookingStage.querySelectorAll("[data-cafe]").forEach((card) => {
+  // Vælger café og går videre til næste trin.
+  function selectCafe() {
+    booking.cafe = CAFES.find((c) => c.id === card.dataset.cafe);
+    booking.step = 2;
+    renderBooking();
+  }
+
+  card.addEventListener("click", selectCafe);
+
+  // Gør det muligt at vælge café med Enter.
+  card.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      selectCafe();
+    }
   });
+});
 }
 
 /* STEP 2 – gæster */
