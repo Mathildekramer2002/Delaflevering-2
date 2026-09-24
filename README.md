@@ -524,3 +524,64 @@ Fokusstyringen i dropdown-menuerne blev tidligere ændret i forbindelse med opti
 Dropdown-menuerne er i stedet blevet eftertestet med VoiceOver på computer. Når eksempelvis "Kategori" åbnes, flyttes fokus direkte til den første valgmulighed, som VoiceOver læser op.
 
 Eftertesten viser dermed, at den tidligere ændring af fokusstyringen også afhjælper det problem, der blev observeret med skærmlæser i den oprindelige brugertest.
+
+
+### Formularfelter uden labels
+
+I delaflevering 1 viste testen med WAVE seks "Missing form label"-fejl. Fejlene blev blandt andet fundet ved søgefeltet samt felter til rating, spilletid og "Kun ledige".
+
+I auditten blev løsningen vurderet til at være, at felterne skulle have meningsfulde `<label>`-elementer, som blev koblet sammen med felternes `id`.
+
+Da problemet skulle optimeres, blev HTML- og JavaScript-koden gennemgået nærmere. Her viste det sig, at de seks fejl ikke skulle løses på samme måde.
+
+#### Søgefelt
+
+Søgefeltet er et synligt formularfelt, som brugeren kan interagere med. Feltet havde kun en placeholder med teksten "Søg", men ikke et tilknyttet `<label>`.
+
+Derfor blev der tilføjet et label med `for="search-input"`, som passer til feltets `id="search-input"`.
+
+```html
+<!-- Giver søgefeltet et navn til skærmlæsere. -->
+<label for="search-input" class="sr-only">Søg efter spil</label>
+<input type="text" id="search-input" placeholder="Søg" />
+```
+
+Klassen `sr-only` gør, at teksten ikke er synlig i designet, men stadig kan læses af en skærmlæser.
+
+Efter ændringen blev siden testet igen med WAVE. Antallet af "Missing form label"-fejl faldt fra **6 til 5**, hvilket viste, at fejlen ved søgefeltet var løst.
+
+![5 errors](dokumentation/labels-error-sogefelt.png)
+![soegefelt efter](dokumentation/soegefelt-efter.png)
+
+#### Oprydning af skjulte formularfelter
+
+De resterende fem fejl kom fra følgende felter:
+
+- `rating-from`
+- `rating-to`
+- `playtime-from`
+- `playtime-to`
+- `available-only`
+
+Ved gennemgang af koden viste det sig, at disse felter lå i et skjult område og ikke kunne bruges af brugeren i den nuværende brugerflade. De var rester fra et tidligere filtersystem, men JavaScript indeholdt stadig kode, som hentede og behandlede deres værdier.
+
+I stedet for at tilføje labels til felter, som brugeren ikke længere kunne benytte, blev de overflødige formularfelter derfor fjernet fra HTML'en. Den JavaScript, som kun var knyttet til disse felter, blev også fjernet.
+
+Rating-oprydningen blev udført først. Herefter faldt antallet af "Missing form label"-fejl fra **5 til 3**.
+
+Derefter blev de gamle felter til spilletid fjernet. Den nuværende filtrering efter varighed fungerer gennem dropdown-menuen "Varighed" og blev testet efter oprydningen for at sikre, at funktionen stadig virkede. Herefter var der **1 fejl tilbage**.
+
+Til sidst blev det skjulte felt `available-only` og den tilhørende JavaScript fjernet, da "Kun ledige" heller ikke findes som en funktion i den nuværende brugerflade.
+
+#### Resultat
+
+Efter oprydningen blev siden testet igen med WAVE.
+
+**Før optimering:** 6 "Missing form label"-fejl  
+**Efter optimering:** 0 "Missing form label"-fejl
+
+![ingen missing labels](dokumentation/0-missing-labels.png)
+
+Søgning, filtrering, sortering og "Ryd filtre" blev samtidig testet efter ændringerne for at kontrollere, at oprydningen ikke havde påvirket de funktioner, der fortsat bruges på siden.
+
+Optimeringen endte derfor med at være anderledes end først foreslået i delaflevering 1. Et label var den rigtige løsning til det synlige søgefelt, mens de øvrige fejl skyldtes overflødige skjulte formularfelter. Her var det mere relevant at fjerne den unødvendige kode end at tilføje labels til felter, som brugeren ikke kunne benytte.

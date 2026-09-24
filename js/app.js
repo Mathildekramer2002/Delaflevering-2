@@ -22,9 +22,6 @@ const els = {
   difficulty: document.getElementById("difficulty-select"),
   ratingFrom: document.getElementById("rating-from"),
   ratingTo: document.getElementById("rating-to"),
-  playFrom: document.getElementById("playtime-from"),
-  playTo: document.getElementById("playtime-to"),
-  availableOnly: document.getElementById("available-only"),
   sort: document.getElementById("sort-select"),
   clear: document.getElementById("clear-filters"),
 
@@ -102,13 +99,6 @@ function hydrateSelects(games) {
   fillUniqueOptions(els.genre, unique(games.map((g) => g.genre)));
   fillUniqueOptions(els.language, unique(games.map((g) => g.language)));
   fillUniqueOptions(els.difficulty, unique(games.map((g) => g.difficulty)));
-
-  // placeholders til rating-range
-  const ratings = games.map((g) => g.rating).filter(Number.isFinite);
-  if (ratings.length) {
-    els.ratingFrom.placeholder = Math.min(...ratings).toFixed(1);
-    els.ratingTo.placeholder = Math.max(...ratings).toFixed(1);
-  }
   updateFavTabCounter();
 }
 
@@ -119,11 +109,6 @@ function bindEvents() {
     els.genre,
     els.language,
     els.difficulty,
-    els.ratingFrom,
-    els.ratingTo,
-    els.playFrom,
-    els.playTo,
-    els.availableOnly,
     els.sort,
     els.agePill,
     els.playersPill,
@@ -256,12 +241,7 @@ function clearAllFilters() {
     const s = document.getElementById(`${k}-select`);
     if (s) s.value = "all";
   });
-  ["rating-from", "rating-to", "playtime-from", "playtime-to"].forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) el.value = "";
-  });
 
-  if (els.availableOnly) els.availableOnly.checked = false;
   if (els.sort) els.sort.value = "none";
 
   const sortButton = document.getElementById("sort-button");
@@ -291,11 +271,6 @@ function getFilters() {
     genre: valueOrAll(els.genre),
     language: valueOrAll(els.language),
     difficulty: valueOrAll(els.difficulty),
-    ratingFrom: num(els.ratingFrom?.value),
-    ratingTo: num(els.ratingTo?.value),
-    playFrom: num(els.playFrom?.value),
-    playTo: num(els.playTo?.value),
-    availableOnly: !!els.availableOnly?.checked,
     sort: valueOrAll(els.sort),
     agePill: valueOrAll(els.agePill),
     playersPill: valueOrAll(els.playersPill),
@@ -317,11 +292,6 @@ function applyFilters(arr, f) {
     if (f.genre !== "all" && g.genre !== f.genre) return false;
     if (f.language !== "all" && g.language !== f.language) return false;
     if (f.difficulty !== "all" && g.difficulty !== f.difficulty) return false;
-    if (f.ratingFrom != null && g.rating < f.ratingFrom) return false;
-    if (f.ratingTo != null && g.rating > f.ratingTo) return false;
-    if (f.playFrom != null && g.playtime < f.playFrom) return false;
-    if (f.playTo != null && g.playtime > f.playTo) return false;
-    if (f.availableOnly && !g.available) return false;
 
     if (f.agePill !== "all" && g.age < Number(f.agePill)) return false;
 
