@@ -293,3 +293,87 @@ Modalvinduet kan desuden lukkes med Escape. Når det lukkes, flyttes fokus tilba
 #### Test
 
 Efter optimeringen er funktionen testet med Tab, Shift + Tab, Enter og Escape. Testen viste, at spillekortene nu kan åbnes med tastatur, "Regler" kan åbnes med Enter, fokus holdes inde i modalvinduet, og fokus returnerer til det valgte spillekort efter lukning.
+
+### Tastaturbetjening af filtre
+
+Keyboard-testen fra delaflevering 1 viste, at filterknapperne kunne modtage fokus med Tab, men dropdown-menuerne kunne ikke åbnes med tastaturet. Det betød, at brugere, der navigerer uden mus, ikke kunne anvende filtreringen.
+
+#### Optimering
+
+Dropdown-menuerne er derfor gjort mulige at betjene med tastatur. Der er tilføjet en `keydown`-event i JavaScript, som registrerer, når brugeren trykker Enter på en filterknap.
+
+Hvis dropdownen er lukket, åbnes den, og fokus flyttes automatisk til den første valgmulighed. Hvis dropdownen allerede er åben, lukkes den igen med Enter.
+
+```javascript
+// Gør det muligt at åbne og lukke dropdowns med Enter.
+row?.addEventListener("keydown", (e) => {
+  const pill = e.target.closest(".filter-dropdown .pill");
+  if (!pill || e.key !== "Enter") return;
+
+  e.preventDefault();
+
+  const dd = pill.closest(".filter-dropdown");
+
+  if (openDD === dd) {
+    closeDropdown();
+  } else {
+    openDropdown(dd, pill);
+
+    // Flytter fokus til den første valgmulighed i den åbne dropdown.
+    const firstOption = floatingMenu?.querySelector("button");
+    firstOption?.focus();
+  }
+});
+```
+
+Den samme funktion anvendes på de forskellige filter-dropdowns, så der ikke skal laves separat tastaturstyring til hvert filter.
+
+![Åben dropdown med tastaturfokus](dokumentation/dropdown-filter-enter.png)
+
+*Figur: Dropdown-menuen er åbnet med Enter, hvorefter fokus automatisk flyttes til den første valgmulighed.*
+
+#### Fokus i den åbne dropdown
+
+Ved test af den første løsning blev det observeret, at fokus kunne fortsætte videre til andre elementer på siden, selvom dropdown-menuen stadig var åben. Fokusstyringen blev derfor tilpasset, så brugeren bliver i den åbne dropdown, indtil den enten lukkes eller der vælges en mulighed.
+
+Når brugeren når den sidste valgmulighed med Tab, flyttes fokus tilbage til filterknappen. Ved navigation i den modsatte retning flyttes fokus ligeledes tilbage til filterknappen, når Shift + Tab anvendes fra den første valgmulighed.
+
+```javascript
+// Tab fra sidste valg går tilbage til filterknappen.
+if (!e.shiftKey && currentFocus === lastOption) {
+  e.preventDefault();
+  filterButton.focus();
+  return;
+}
+
+// Shift + Tab fra første valg går tilbage til filterknappen.
+if (e.shiftKey && currentFocus === firstOption) {
+  e.preventDefault();
+  filterButton.focus();
+  return;
+}
+```
+
+Når fokus er tilbage på filterknappen, kan brugeren lukke dropdown-menuen med Enter. Først når dropdownen er lukket, går Tab videre til det næste filter.
+
+Hvis brugeren vælger en valgmulighed med Enter, lukkes dropdown-menuen, og fokus flyttes tilbage til den filterknap, menuen blev åbnet fra.
+
+```javascript
+// Sender fokus tilbage til den dropdown-knap brugeren kom fra,
+// når menuen er blevet lukket.
+requestAnimationFrame(() => {
+  activePill?.focus();
+});
+```
+
+![Fokus tilbage på filterknap](dokumentation/dropdown-filter-fokus.png)
+
+*Figur: Fokus er tilbage på filterknappen, mens dropdown-menuen stadig er åben. Herfra kan menuen lukkes med Enter, før brugeren navigerer videre.*
+
+#### Test
+
+Efter optimeringen er Kategori, Spillere, Alder og Varighed testet med Tab, Shift + Tab og Enter.
+
+Testen viste, at alle fire dropdown-menuer nu kan åbnes og lukkes med tastatur. Brugeren kan navigere mellem valgmulighederne med Tab og Shift + Tab, og fokus bliver i den åbne dropdown, indtil brugeren vælger en mulighed eller lukker menuen.
+
+Ved valg af en mulighed returnerer fokus til den tilhørende filterknap, så brugeren kan fortsætte tastaturnavigationen fra samme sted.

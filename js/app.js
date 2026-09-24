@@ -536,6 +536,8 @@ function setupDropdownFilters() {
   const row = document.querySelector(".filterbar");
   let openDD = null;
   let floatingMenu = null;
+    // Gemmer den knap der åbnede dropdown-menuen, så fokus kan komme tilbage til den efter et valg.
+  let activePill = null;
 
   function setFilter(type, rawValue) {
     if (type === "genre") {
@@ -571,6 +573,8 @@ function setupDropdownFilters() {
 
   function openDropdown(dd, pill) {
     closeDropdown();
+    // Gemmer den knap brugeren åbner dropdown-menuen fra, så fokus kan komme tilbage til den efter et valg.
+activePill = pill;
     dd.classList.add("open");
     const menu = dd.querySelector(".dropdown-menu");
     if (!menu) return;
@@ -635,6 +639,73 @@ row?.addEventListener("pointerdown", (e) => {
   }
 });
 
+// Gør det muligt at åbne og lukke dropdowns med Enter.
+row?.addEventListener("keydown", (e) => {
+  const pill = e.target.closest(".filter-dropdown .pill");
+  if (!pill || e.key !== "Enter") return;
+
+  e.preventDefault();
+
+  const dd = pill.closest(".filter-dropdown");
+
+ if (openDD === dd) {
+  closeDropdown();
+} else {
+  openDropdown(dd, pill);
+
+  // Flytter fokus til den første valgmulighed i den åbne dropdown.
+  const firstOption = floatingMenu?.querySelector("button");
+  firstOption?.focus();
+}
+});
+
+// Holder fokus inde i den dropdown der er åben.
+// Først når dropdownen lukkes, kan Tab gå videre til næste filter.
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Tab" || !openDD || !floatingMenu) return;
+
+  // Finder knappen til den dropdown der er åben.
+  const filterButton = openDD.querySelector(".pill");
+
+  // Finder alle valgmuligheder i den åbne dropdown.
+  const options = Array.from(
+    floatingMenu.querySelectorAll("button:not([disabled])")
+  );
+
+  if (!filterButton || options.length === 0) return;
+
+  const firstOption = options[0];
+  const lastOption = options[options.length - 1];
+  const currentFocus = document.activeElement;
+
+  // Tab fra sidste valg går tilbage til filterknappen.
+  if (!e.shiftKey && currentFocus === lastOption) {
+    e.preventDefault();
+    filterButton.focus();
+    return;
+  }
+
+  // Tab fra filterknappen går til første valg.
+  if (!e.shiftKey && currentFocus === filterButton) {
+    e.preventDefault();
+    firstOption.focus();
+    return;
+  }
+
+  // Shift + Tab fra første valg går tilbage til filterknappen.
+  if (e.shiftKey && currentFocus === firstOption) {
+    e.preventDefault();
+    filterButton.focus();
+    return;
+  }
+
+  // Shift + Tab fra filterknappen går til sidste valg.
+  if (e.shiftKey && currentFocus === filterButton) {
+    e.preventDefault();
+    lastOption.focus();
+  }
+});
+
   // Klik på menupunkt
 document.addEventListener("click", (e) => {
   const item = e.target.closest(".dropdown-menu button");
@@ -654,6 +725,8 @@ document.addEventListener("click", (e) => {
 
     render();
     closeDropdown();
+    // Sender fokus tilbage til den dropdown-knap brugeren kom fra.
+    activePill?.focus();
     e.stopPropagation();
     return;
   }
@@ -662,8 +735,11 @@ document.addEventListener("click", (e) => {
   const ok = setFilter(item.dataset.filter, item.dataset.value);
 
   if (ok) render();
-
   closeDropdown();
+  // Sender fokus tilbage til den dropdown-knap brugeren kom fra, når menuen er blevet lukket.
+    requestAnimationFrame(() => {
+    activePill?.focus();
+});
   e.stopPropagation();
 });
 
