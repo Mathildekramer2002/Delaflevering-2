@@ -146,10 +146,24 @@ function bindEvents() {
       if (FAVS.has(id)) {
         FAVS.delete(id);
         favBtn.classList.remove("active");
-      } else {
-        FAVS.add(id);
-        favBtn.classList.add("active");
-      }
+        favBtn.setAttribute("aria-label", "Tilføj til favoritter");
+
+  // Giver skærmlæseren besked om, at spillet er fjernet.
+  const feedback = document.getElementById("filter-feedback");
+  if (feedback) {
+    feedback.textContent = "Fjernet fra favoritter";
+  }
+} else {
+  FAVS.add(id);
+  favBtn.classList.add("active");
+  favBtn.setAttribute("aria-label", "Fjern fra favoritter");
+
+  // Giver skærmlæseren besked om, at spillet er tilføjet.
+  const feedback = document.getElementById("filter-feedback");
+  if (feedback) {
+    feedback.textContent = "Tilføjet til favoritter";
+  }
+}
       localStorage.setItem(STORAGE_KEY, JSON.stringify([...FAVS]));
       updateFavTabCounter();
       if (SHOW_FAVS) render();
@@ -258,6 +272,12 @@ function clearAllFilters() {
   els.tabFav?.classList.remove("active");
 
   render();
+
+  // Giver skærmlæseren besked om, at filtrene er blevet ryddet.
+  const feedback = document.getElementById("filter-feedback");
+  if (feedback) {
+  feedback.textContent = "Filtre er ryddet";
+}
 }
 
 // FILTER / SORT
@@ -365,6 +385,10 @@ function render() {
     const imageName = g.image.split("/").pop();
     const imageBase = imageName.replace(".webp", "");
     const favActive = FAVS.has(String(g.id)) ? "active" : "";
+    // Fortæller skærmlæseren, om spillet kan tilføjes eller fjernes fra favoritter.
+    const favLabel = FAVS.has(String(g.id))
+      ? "Fjern fra favoritter"
+      : "Tilføj til favoritter";    
     const players = g.players ? `${g.players.min}–${g.players.max}` : "—";
     const rating = Number.isFinite(g.rating) ? g.rating.toFixed(1) : "—";
     const badgeAvail = g.available ? `<span class="badge">Ledig</span>` : ``;
@@ -386,7 +410,7 @@ function render() {
        <div class="badges">${badgeAvail}</div>
        <button class="fav ${favActive}" data-fav-id="${
     g.id
-  }" aria-label="Føj til favoritter">❤</button>
+  }" aria-label="${favLabel}">❤</button>
      </div>
      <h3>${escapeHtml(g.title)}</h3>
      <div class="meta">

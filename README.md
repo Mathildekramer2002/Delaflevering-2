@@ -401,3 +401,126 @@ Efter de enkelte ændringer blev keyboard-testen fra delaflevering 1 gentaget. F
 ![Ny keyboard test](dokumentation/keyboard-test-efter.png)
 
 Testen viste, at de centrale funktioner, som tidligere gav problemer ved tastaturnavigation, nu kan betjenes uden brug af mus.
+
+## Optimering til skærmlæser
+
+I brugertesten fra delaflevering 1 blev der fundet flere problemer ved brug af skærmlæser. Der manglede blandt andet feedback ved handlinger som favoritter og rydning af filtre. Derudover skulle brugeren selv forsøge at navigere ind i dropdown-menuerne, efter de var blevet åbnet.
+
+Derfor er der arbejdet med at gøre feedback og navigation tydeligere for skærmlæserbrugere.
+
+### Feedback ved rydning af filtre
+
+I brugertesten kunne skærmlæseren læse knappen "Ryd filtre", men efter aktivering kom der ingen feedback om, at filtrene faktisk var blevet ryddet.
+
+#### Optimering
+
+Der er tilføjet et skjult område med `aria-live="polite"`. Området er ikke synligt på siden, men gør det muligt at give skærmlæseren besked, når der sker en ændring.
+
+```html
+<!-- Giver skærmlæseren besked, når der sker en ændring. -->
+<p id="filter-feedback" class="sr-only" aria-live="polite"></p>
+```
+
+Området skjules visuelt med CSS, men er stadig tilgængeligt for skærmlæsere.
+
+```css
+/* Skjuler indhold visuelt, men gør det stadig tilgængeligt for skærmlæsere. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+```
+
+Når "Ryd filtre" aktiveres, indsættes beskeden "Filtre er ryddet" i `aria-live`-området.
+
+```javascript
+// Giver skærmlæseren besked om, at filtrene er blevet ryddet.
+const feedback = document.getElementById("filter-feedback");
+if (feedback) {
+  feedback.textContent = "Filtre er ryddet";
+}
+```
+
+#### Test
+
+Efter ændringen blev funktionen testet med VoiceOver på computer. Når "Ryd filtre" aktiveres, annoncerer VoiceOver nu "Filtre er ryddet", så brugeren får bekræftet, at handlingen er gennemført.
+
+
+### Favoritter
+
+I brugertesten manglede der tydelig information og feedback ved favoritfunktionen. Det var derfor ikke tydeligt for en skærmlæserbruger, om et spil kunne tilføjes eller fjernes fra favoritter, og der kom heller ingen bekræftelse efter handlingen.
+
+#### Optimering
+
+Favoritknappen har fået et dynamisk `aria-label`, som afhænger af, om spillet allerede er gemt som favorit.
+
+```javascript
+// Fortæller skærmlæseren, om spillet kan tilføjes eller fjernes fra favoritter.
+const favLabel = FAVS.has(String(g.id))
+  ? "Fjern fra favoritter"
+  : "Tilføj til favoritter";
+```
+
+Det dynamiske label tilføjes til favoritknappen:
+
+```html
+<button class="fav ${favActive}" data-fav-id="${g.id}" aria-label="${favLabel}">❤</button>
+```
+
+Når et spil fjernes fra favoritter, ændres knappens `aria-label` til "Tilføj til favoritter". Samtidig bruges det tidligere oprettede `aria-live`-område til at give beskeden "Fjernet fra favoritter".
+
+```javascript
+if (FAVS.has(id)) {
+  FAVS.delete(id);
+  favBtn.classList.remove("active");
+  favBtn.setAttribute("aria-label", "Tilføj til favoritter");
+
+  // Giver skærmlæseren besked om, at spillet er fjernet.
+  const feedback = document.getElementById("filter-feedback");
+  if (feedback) {
+    feedback.textContent = "Fjernet fra favoritter";
+  }
+}
+```
+
+Når et spil tilføjes til favoritter, ændres knappens `aria-label` i stedet til "Fjern fra favoritter", og skærmlæseren får beskeden "Tilføjet til favoritter".
+
+```javascript
+else {
+  FAVS.add(id);
+  favBtn.classList.add("active");
+  favBtn.setAttribute("aria-label", "Fjern fra favoritter");
+
+  // Giver skærmlæseren besked om, at spillet er tilføjet.
+  const feedback = document.getElementById("filter-feedback");
+  if (feedback) {
+    feedback.textContent = "Tilføjet til favoritter";
+  }
+}
+```
+
+#### Test
+
+Favoritfunktionen blev testet med VoiceOver på computer. Hvis et spil ikke er gemt som favorit, læser VoiceOver "Tilføj til favoritter". Efter aktivering gives beskeden "Tilføjet til favoritter".
+
+Når spillet allerede er gemt som favorit, læser VoiceOver "Fjern fra favoritter". Efter fjernelse gives beskeden "Fjernet fra favoritter".
+
+Brugeren får dermed både information om, hvad knappen gør, og feedback om resultatet efter handlingen.
+
+
+### Eftertest af dropdown-menuer med skærmlæser
+
+I den oprindelige brugertest oplevede brugeren, at hun selv skulle forsøge at navigere ind i dropdown-menuen efter åbning.
+
+Fokusstyringen i dropdown-menuerne blev tidligere ændret i forbindelse med optimeringen af tastaturbetjeningen. Der er derfor ikke foretaget yderligere ændringer i dropdown-menuerne i denne del.
+
+Dropdown-menuerne er i stedet blevet eftertestet med VoiceOver på computer. Når eksempelvis "Kategori" åbnes, flyttes fokus direkte til den første valgmulighed, som VoiceOver læser op.
+
+Eftertesten viser dermed, at den tidligere ændring af fokusstyringen også afhjælper det problem, der blev observeret med skærmlæser i den oprindelige brugertest.
