@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Alle spil | Spilcaféen</title>
+
+    <link rel="stylesheet" href="css/app.css">
+
+    <link rel="shortcut icon"
+        href="https://images.squarespace-cdn.com/content/v1/61fd2c9026a58c435d260f4c/1af90772-e642-4309-a2cb-f4161e36855e/SC-logo-2023-transparant-BG+Small+Crop.png"
+        type="image/logo">
+</head>
+
+<body>
+
+    <!-- Alle spil -->
+    <main id="games-view" class="page">
+
+        <!-- Sidens overskrift -->
+        <div class="games-heading">
+            <img src="images/logo.webp" alt="Spilcaféen">
+            <h1 id="page-title">ALLE SPIL</h1>
+        </div>
+
+
+        <!-- Søgning -->
+        <div class="searchbar">
+            <label for="search-input" class="sr-only">
+                Søg efter spil
+            </label>
+
+            <input type="text" id="search-input" placeholder="Søg">
+
+            <span class="icon-btn" aria-hidden="true">
+                <img src="images/lup.png" alt="">
+            </span>
+        </div>
+
+
+        <!-- Filtre -->
+        <div class="filterbar">
+
+            <!-- Samlet filtermenu -->
+            <div class="filter-menu">
+
+                <button class="filter-main-btn" id="filter-main-btn" type="button" aria-expanded="false"
+                    aria-controls="filter-options">
+                    <span aria-hidden="true"></span>
+                    FILTRE
+                </button>
+
+
+                <div class="filter-options" id="filter-options" hidden>
+
+                    <!-- Kategori -->
+                    <div class="filter-group">
+
+                        <button class="filter-group-btn" type="button" aria-expanded="false">
+                            Kategori
+                            <span aria-hidden="true">›</span>
+                        </button>
+
+                        <div class="filter-submenu" hidden>
+
+                            <button type="button" data-filter="genre" data-value="all">
+                                Alle kategorier
+                            </button>
+
+                            <button type="button" data-filter="genre" data-value="Familie">
+                                Familie
+                            </button>
+
+                            <button type="button" data-filter="genre" data-value="Kortspil">
+                                Kortspil
+                            </button>
+
+                            <button type="button" data-filter="genre" data-value="Strategi">
+                                Strategi
+                            </button>
+
+                            <button type="button" data-filter="genre" data-value="Ordspil">
+                                Ordspil
+                            </button>
+
+                            <button type="button" data-filter="genre" data-value="Party">
+                                Party
+                            </button>
+
+                            <button type="button" data-filter="genre" data-value="Andre">
+                                Andre
+                            </button>
+
+                        </div>
+                    </div>
+
+
+                    <!-- Spillere -->
+                    <div class="filter-group">
+
+                        <button class="filter-group-btn" type="button" aria-expanded="false">
+                            Spillere
+                            <span aria-hidden="true">›</span>
+                        </button>
+
+                        <div class="filter-submenu" hidden>
+
+                            <button type="button" data-filter="players" data-value="all">
+                                Alle
+                            </button>
+
+                            <button type="button" data-filter="players" data-value="1-2">
+                                1–2 spillere
+                            </button>
+
+                            <button type="button" data-filter="players" data-value="2-4">
+                                2–4 spillere
+                            </button>
+
+                            <button type="button" data-filter="players" data-value="4-6">
+                                4–6 spillere
+                            </button>
+
+                            <button type="button" data-filter="players" data-value="6-10">
+                                6–10 spillere
+                            </button>
+
+                            <button type="button" data-filter="players" data-value="10-+">
+                                10+ spillere
+                            </button>
+
+                        </div>
+                    </div>
+
+
+                    <!-- Alder -->
+                    <div class="filter-group">
+
+                        <button class="filter-group-btn" type="button" aria-expanded="false">
+                            Alder
+                            <span aria-hidden="true">›</span>
+                        </button>
+
+                        <div class="filter-submenu" hidden>
+
+                            <button type="button" data-filter="age" data-value="all">
+                                Alle aldre
+                            </button>
+
+                            <button type="button" data-filter="age" data-value="3">
+                                3+
+                            </button>
+
+                            <button type="button" data-filter="age" data-value="6">
+                                6+
+                            </button>
+
+                            <button type="button" data-filter="age" data-value="8">
+                                8+
+                            </button>
+
+                            <button type="button" data-filter="age" data-value="10">
+                                10+
+                            </button>
+
+                            <button type="button" data-filter="age" data-value="12">
+                                12+
+                            </button>
+
+                            <button type="button" data-filter="age" data-value="15">
+                                15+
+                            </button>
+
+                            <button type="button" data-filter="age" data-value="18">
+                                18+
+                            </button>
+
+                        </div>
+                    </div>
+
+
+                    <!-- Varighed -->
+                    <div class="filter-group">
+
+                        <button class="filter-group-btn" type="button" aria-expanded="false">
+                            Varighed
+                            <span aria-hidden="true">›</span>
+                        </button>
+
+                        <div class="filter-submenu" hidden>
+
+                            <button type="button" data-filter="duration" data-value="all">
+                                Alle
+                            </button>
+
+                            <button type="button" data-filter="duration" data-value="0-15">
+                                ≤ 15 min
+                            </button>
+
+                            <button type="button" data-filter="duration" data-value="15-30">
+                                15–30 min
+                            </button>
+
+                            <button type="button" data-filter="duration" data-value="30-60">
+                                30–60 min
+                            </button>
+
+                            <button type="button" data-filter="duration" data-value="60-120">
+                                60–120 min
+                            </button>
+
+                            <button type="button" data-filter="duration" data-value="120-+">
+                                120+ min
+                            </button>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- Sortering og ryd filtre -->
+            <div class="filter-actions">
+
+                <div class="filter-dropdown sort-dropdown">
+
+                    <button class="pill" id="sort-button" type="button">
+                        SORTER
+                    </button>
+
+                    <div class="dropdown-menu">
+                        <button data-sort-value="rating">
+                            Populære
+                        </button>
+
+                        <button data-sort-value="title">
+                            A–Å
+                        </button>
+
+                        <button data-sort-value="none">
+                            Nyeste
+                        </button>
+                    </div>
+
+                </div>
+
+
+                <button class="clear-pill" id="clear-filters-pill" type="button">
+                    RYD FILTRE
+                </button>
+
+
+                <!-- Feedback til skærmlæser -->
+                <p id="filter-feedback" class="sr-only" aria-live="polite"></p>
+
+            </div>
+        </div>
+
+
+        <!-- Aktive filtre -->
+        <div id="active-filter-tags" class="active-filter-tags" aria-label="Valgte filtre"></div>
+
+
+        <!-- Spil indsættes med JavaScript -->
+        <section id="game-list" class="card-grid"></section>
+
+    </main>
+
+
+    <!-- Skjulte værdier som filterkoden bruger -->
+    <div class="filters-storage" hidden>
+
+        <select id="genre-select" aria-label="Kategori">
+            <option value="all">Alle kategorier</option>
+        </select>
+
+        <select id="language-select" aria-label="Sprog">
+            <option value="all">Alle sprog</option>
+        </select>
+
+        <select id="difficulty-select" aria-label="Sværhedsgrad">
+            <option value="all">Alle sværhedsgrader</option>
+        </select>
+
+        <select id="sort-select" aria-label="Sortering">
+            <option value="none">Ingen sortering</option>
+            <option value="title">Titel (A-Å)</option>
+            <option value="playtime">Varighed (kortest først)</option>
+            <option value="rating">Rating (højeste først)</option>
+        </select>
+
+        <button id="clear-filters" type="button">
+            Ryd
+        </button>
+
+    </div>
+
+
+    <!-- Modal med information om spil -->
+    <div id="game-modal" class="modal" hidden>
+
+        <div class="modal-backdrop" data-close></div>
+
+        <article class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+            <button class="modal-close" data-close aria-label="Luk">
+                ×
+            </button>
+
+
+            <div class="modal-media">
+                <img id="modal-image" alt="">
+            </div>
+
+
+            <div class="modal-body">
+
+                <h2 id="modal-title">
+                    Spildetaljer
+                </h2>
+
+                <div class="modal-meta" id="modal-meta"></div>
+
+                <p id="modal-desc"></p>
+
+                <div class="modal-details" id="modal-details"></div>
+
+
+                <!-- Spilleregler -->
+                <section id="modal-rules-wrap" class="modal-rules" hidden>
+
+                    <button id="rules-toggle" class="rules-btn" aria-expanded="false">
+                        ▸ Regler
+                    </button>
+
+                    <div id="rules-content" class="rules-content">
+                        <pre id="modal-rules"></pre>
+                    </div>
+
+                </section>
+
+            </div>
+        </article>
+    </div>
+
+
+    <!-- Bundnavigation -->
+    <nav class="tabbar" aria-label="Hovednavigation">
+    
+        <button class="tab" id="tab-home" type="button" onclick="window.location.href='index.html'">
+            <img src="images/home.svg" alt="">
+            <small>Hjem</small>
+        </button>
+    
+        <button class="tab" id="tab-all" type="button" onclick="window.location.href='spil.html'">
+            <img src="images/games.svg" alt="">
+            <small>Alle spil</small>
+        </button>
+    
+        <button class="tab" id="filter-favourites" type="button" onclick="window.location.href='favoritter.html'">
+            <img src="images/heart.svg" alt="">
+            <small>Favoritter</small>
+        </button>
+    
+        <button class="tab" id="tab-reserve" type="button" onclick="window.location.href='booking.html'">
+            <img src="images/book.svg" alt="">
+            <small>Book bord</small>
+        </button>
+    
+        <button class="tab" id="tab-profile" type="button">
+            <img src="images/profil.svg" alt="">
+            <small>Profil</small>
+        </button>
+    
+    </nav>
+
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>

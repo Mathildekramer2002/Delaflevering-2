@@ -781,3 +781,21 @@ Efter ændringen blev siden testet igen med WAVE. Testen viste 0 errors, 0 contr
 - Den samme `gameCard()`-funktion kan fortsat genbruges på de forskellige visninger.
 - Spillekortenes visuelle udseende er bevaret på tværs af overskriftsniveauerne.
 - WAVE viser 0 errors, 0 contrast errors og 0 alerts.
+
+
+### Opdeling af sider
+
+Jeg har delt websitet op, så de forskellige dele nu ligger på hver sin HTML-side i stedet for at det hele ligger samlet i index.html.
+
+- index.html = forsiden
+- spil.html = alle spil
+- favoritter.html = favoritter
+- booking.html = booking
+
+Jeg valgte at dele siderne op for at gøre koden mere overskuelig og for at gøre det nemmere at teste de enkelte sider hver for sig i fx WAVE og Lighthouse.
+
+Navigationen i bunden er tilpasset, så man kan navigere mellem de forskellige HTML-sider. Booking.js er også blevet tilpasset, så bookingflowet starter direkte på booking.html i stedet for at blive åbnet inde på forsiden.
+
+Efter opdelingen testede jeg, at navigationen og funktionerne stadig virkede på de forskellige sider.
+
+På booking-siden viste WAVE 0 errors og 0 contrast errors, men 1 alert om manglende h1. "Vælg café" blev derfor ændret fra h2 til h1, og caféernes overskrifter fra h3 til h2, så headingstrukturen passer til den nye selvstændige side.

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Favoritter | Spilcaféen</title>
+
+    <link rel="stylesheet" href="css/app.css">
+
+    <link rel="shortcut icon"
+        href="https://images.squarespace-cdn.com/content/v1/61fd2c9026a58c435d260f4c/1af90772-e642-4309-a2cb-f4161e36855e/SC-logo-2023-transparant-BG+Small+Crop.png"
+        type="image/logo">
+</head>
+
+<body>
+
+    <!-- Favoritter -->
+    <main id="games-view" class="page">
+
+        <div class="games-heading">
+            <img src="images/logo.webp" alt="Spilcaféen">
+            <h1 id="page-title">DINE FAVORITTER</h1>
+        </div>
+
+        <!-- Favoritspil indsættes med JavaScript -->
+        <section id="game-list" class="card-grid"></section>
+
+    </main>
+
+
+    <!-- Modal med information om spil -->
+    <div id="game-modal" class="modal" hidden>
+
+        <div class="modal-backdrop" data-close></div>
+
+        <article class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+            <button class="modal-close" data-close aria-label="Luk">
+                ×
+            </button>
+
+            <div class="modal-media">
+                <img id="modal-image" alt="">
+            </div>
+
+            <div class="modal-body">
+
+                <h2 id="modal-title">
+                    Spildetaljer
+                </h2>
+
+                <div class="modal-meta" id="modal-meta"></div>
+
+                <p id="modal-desc"></p>
+
+                <div class="modal-details" id="modal-details"></div>
+
+
+                <!-- Spilleregler -->
+                <section id="modal-rules-wrap" class="modal-rules" hidden>
+
+                    <button id="rules-toggle" class="rules-btn" aria-expanded="false">
+                        ▸ Regler
+                    </button>
+
+                    <div id="rules-content" class="rules-content">
+                        <pre id="modal-rules"></pre>
+                    </div>
+
+                </section>
+
+            </div>
+        </article>
+    </div>
+
+
+    <!-- Bundnavigation -->
+<nav class="tabbar" aria-label="Hovednavigation">
+
+    <button class="tab" id="tab-home" type="button" onclick="window.location.href='index.html'">
+        <img src="images/home.svg" alt="">
+        <small>Hjem</small>
+    </button>
+
+    <button class="tab" id="tab-all" type="button" onclick="window.location.href='spil.html'">
+        <img src="images/games.svg" alt="">
+        <small>Alle spil</small>
+    </button>
+
+    <button class="tab" id="filter-favourites" type="button" onclick="window.location.href='favoritter.html'">
+        <img src="images/heart.svg" alt="">
+        <small>Favoritter</small>
+    </button>
+
+    <button class="tab" id="tab-reserve" type="button" onclick="window.location.href='booking.html'">
+        <img src="images/book.svg" alt="">
+        <small>Book bord</small>
+    </button>
+
+    <button class="tab" id="tab-profile" type="button">
+        <img src="images/profil.svg" alt="">
+        <small>Profil</small>
+    </button>
+
+</nav>
+
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>

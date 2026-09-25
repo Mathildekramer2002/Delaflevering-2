@@ -71,8 +71,11 @@ els.durationPill = els.durationPill || ensureHiddenPill("duration-pill");
 
 // STATE
 
+// Finder ud af hvilken HTML-side brugeren er på.
+const currentPage = window.location.pathname.split("/").pop() || "index.html";
+
 let GAMES = [];
-let SHOW_FAVS = false;
+let SHOW_FAVS = currentPage === "favoritter.html";
 let FAVS = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"));
 
 // Gemmer de filtre, hvor brugeren kan vælge flere muligheder.
@@ -100,7 +103,10 @@ async function init() {
     renderPopularGames();
   } catch (err) {
     console.error(err);
-    els.list.innerHTML = `<p>Kunne ikke indlæse spil.</p>`;
+
+    if (els.list) {
+      els.list.innerHTML = `<p>Kunne ikke indlæse spil.</p>`;
+    }
   }
 }
 
@@ -172,97 +178,48 @@ function bindEvents() {
     });
   });
 
-  // Tabbar
+  // Bundnavigation mellem siderne.
   els.tabAll?.addEventListener("click", () => {
-    if (!bookingView?.hidden) closeBooking();
-    SHOW_FAVS = false;
-    homeView.hidden = true;
-    gamesView.hidden = false;
-    setActiveTab(els.tabAll);
-    document.getElementById("page-title").textContent = "ALLE SPIL";
-    render();
-  });
-
-  // Gør det muligt at åbne et spillekort med Enter, når selve kortet har fokus.
-  // e.target === card gør, at Enter på favorit-hjertet ikke også åbner spillet.
-
-  [els.list, els.popularGames].forEach((list) => {
-    list?.addEventListener("keydown", (e) => {
-      const card = e.target.closest(".card[data-id]");
-
-      if (card && e.target === card && e.key === "Enter") {
-        e.preventDefault();
-        e.stopPropagation();
-        openModalById(card.dataset.id);
-      }
-    });
+    window.location.href = "spil.html";
   });
 
   els.tabFav?.addEventListener("click", () => {
-    // Lukker bookingvisningen, hvis brugeren går direkte til favoritter.
-    if (!bookingView?.hidden) closeBooking();
-
-    SHOW_FAVS = true;
-    homeView.hidden = true;
-    gamesView.hidden = false;
-    setActiveTab(els.tabFav);
-    document.getElementById("page-title").textContent = "DINE FAVORITTER";
-    render();
+    window.location.href = "favoritter.html";
   });
 
   els.tabRes?.addEventListener("click", () => {
-    // Skjuler de andre visninger og åbner booking.
-    homeView.hidden = true;
-    gamesView.hidden = true;
-
-    setActiveTab(els.tabRes);
-    openBooking();
+    window.location.href = "booking.html";
   });
-  
+
   els.tabHome?.addEventListener("click", () => {
-    if (!bookingView?.hidden) closeBooking();
-
-    SHOW_FAVS = false;
-
-    // Viser forsiden og skjuler spiloversigten.
-    homeView.hidden = false;
-    gamesView.hidden = true;
-
-    setActiveTab(els.tabHome);
+    window.location.href = "index.html";
   });
-
-  // Tilbageknap – luk modal/booking hvis åbne
-  els.backBtn?.addEventListener("click", () => {
-    if (modal && modal.hidden === false) {
-      closeModal();
-      return;
-    }
-    if (bookingView && bookingView.hidden === false) {
-      closeBooking();
-      return;
-    }
-    // ellers ingen handling
-  });
-
-  // Starter dropdown til sortering.
-  setupDropdownFilters();
-
-  // Starter den nye samlede filtermenu.
-  setupFilterMenu();
-  // Knap på forsiden åbner siden med alle spil.
-  document
-    .getElementById("home-games-button")
-    ?.addEventListener("click", () => {
-      els.tabAll?.click();
-    });
-
-  // Knap på forsiden åbner den eksisterende booking.
-  document
-    .getElementById("home-booking-button")
-    ?.addEventListener("click", () => {
-      document.getElementById("tab-reserve")?.click();
-    });
 }
+
+// Tilbageknap lukker modal, hvis den er åben.
+els.backBtn?.addEventListener("click", () => {
+  if (modal && modal.hidden === false) {
+    closeModal();
+  }
+});
+
+// Starter dropdown til sortering.
+setupDropdownFilters();
+
+// Starter den nye samlede filtermenu.
+setupFilterMenu();
+
+// Åbner siden med alle spil fra forsiden.
+document.getElementById("home-games-button")?.addEventListener("click", () => {
+  window.location.href = "spil.html";
+});
+
+// Åbner booking fra forsiden.
+document
+  .getElementById("home-booking-button")
+  ?.addEventListener("click", () => {
+    window.location.href = "booking.html";
+  });
 
 function setFilter(type, rawValue) {
   // Kategori, spillere og varighed kan have flere aktive valg.
@@ -635,6 +592,9 @@ function applySort(arr, key) {
 // RENDER
 
 function render() {
+  // Forsiden har ingen almindelig spilleliste.
+  if (!els.list) return;
+
   const f = getFilters();
   const filtered = applyFilters(GAMES, f);
   const sorted = applySort(filtered, f.sort);
@@ -652,7 +612,7 @@ function render() {
       document
         .getElementById("show-all-games")
         ?.addEventListener("click", () => {
-          els.tabAll?.click();
+          window.location.href = "spil.html";
         });
     } else {
       els.list.innerHTML = `
@@ -1067,8 +1027,7 @@ function setupDropdownFilters() {
 
 function isHomeView() {
   const modalOpen = modal && modal.hidden === false;
-  const bookingOpen = bookingView && bookingView.hidden === false;
-  return !(modalOpen || bookingOpen);
+  return !modalOpen;
 }
 function updateBackIcon() {
   if (!els.backBtn) return;

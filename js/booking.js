@@ -45,43 +45,31 @@ const booking = {
 };
 
 function openBooking() {
-  if (!bookingView) return;
-    
-    document.querySelector("main.page").style.display = "none";
-    bookingView.hidden = false;
+  if (!bookingView || !bookingStage) return;
 
-      booking.month = new Date(
-        new Date().getFullYear(), 
-        new Date().getMonth(), 
-        1
-        );
+  // Starter bookingflowet på første trin.
+  booking.month = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
-      booking.step = 1;
-      renderBooking();
+  booking.step = 1;
+  renderBooking();
 
-      // Flytter fokus til den første café, når bookingflowet åbnes.
-requestAnimationFrame(() => {
-  bookingStage.querySelector("[data-cafe]")?.focus();
-});
-
-      document
-        .querySelectorAll(".tabbar .tab")
-        .forEach((t) => t.classList.remove("active"));
-            
-    document.getElementById("tab-reserve")?.classList.add("active");
+  // Flytter fokus til den første café.
+  requestAnimationFrame(() => {
+    bookingStage.querySelector("[data-cafe]")?.focus();
+  });
 }
 
 function closeBooking() {
-    if (!bookingView) return;
+  if (!bookingView) return;
 
-    bookingView.hidden = true;
-    document.querySelector("main.page").style.display = "";
+  bookingView.hidden = true;
+  document.querySelector("main.page").style.display = "";
 
-    document
-        .querySelectorAll(".tabbar .tab")
-        .forEach((t) => t.classList.remove("active"));
-    
-    document.getElementById("tab-home")?.classList.add("active");
+  document
+    .querySelectorAll(".tabbar .tab")
+    .forEach((t) => t.classList.remove("active"));
+
+  document.getElementById("tab-home")?.classList.add("active");
 }
 
 function renderBooking() {
@@ -115,37 +103,37 @@ function logo() {
 function renderStepCafe() {
   bookingStage.innerHTML = `
    ${logo()}
-   <h2 class="booking-title">Vælg café</h2>
+   <h1 class="booking-title">Vælg café</h1>
    <div class="booking-grid booking-cafes">
      ${CAFES.map(
        (c) => `
 <article class="booking-card" data-cafe="${c.id}" tabindex="0">
          <img src="${c.img}" alt="">
-         <h3>${c.name}</h3>
+         <h2>${c.name}</h2>
          <p>${c.address}</p>
        </article>
-     `
+     `,
      ).join("")}
    </div>
  `;
- bookingStage.querySelectorAll("[data-cafe]").forEach((card) => {
-  // Vælger café og går videre til næste trin.
-  function selectCafe() {
-    booking.cafe = CAFES.find((c) => c.id === card.dataset.cafe);
-    booking.step = 2;
-    renderBooking();
-  }
-
-  card.addEventListener("click", selectCafe);
-
-  // Gør det muligt at vælge café med Enter.
-  card.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      selectCafe();
+  bookingStage.querySelectorAll("[data-cafe]").forEach((card) => {
+    // Vælger café og går videre til næste trin.
+    function selectCafe() {
+      booking.cafe = CAFES.find((c) => c.id === card.dataset.cafe);
+      booking.step = 2;
+      renderBooking();
     }
+
+    card.addEventListener("click", selectCafe);
+
+    // Gør det muligt at vælge café med Enter.
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        selectCafe();
+      }
+    });
   });
-});
 }
 
 /* STEP 2 – gæster */
@@ -178,11 +166,11 @@ function renderStepMonth() {
 
   const leading = Array.from(
     { length: startW },
-    () => `<div class="cal-cell muted"></div>`
+    () => `<div class="cal-cell muted"></div>`,
   ).join("");
   const body = Array.from(
     { length: days },
-    (_, i) => `<button class="cal-cell" data-day="${i + 1}">${i + 1}</button>`
+    (_, i) => `<button class="cal-cell" data-day="${i + 1}">${i + 1}</button>`,
   ).join("");
 
   bookingStage.innerHTML = `
@@ -225,12 +213,12 @@ function renderStepMonth() {
 function renderStepDayAndTime() {
   const human = new Date(booking.date + "T00:00:00").toLocaleDateString(
     "da-DK",
-    { day: "numeric", month: "long", year: "numeric" }
+    { day: "numeric", month: "long", year: "numeric" },
   );
   const slots = [];
   for (let h = 11; h <= 22; h++)
     ["00", "30"].forEach((m) =>
-      slots.push(`${String(h).padStart(2, "0")}:${m}`)
+      slots.push(`${String(h).padStart(2, "0")}:${m}`),
     );
   const busy = new Set(["11:30", "14:00", "16:30", "18:00", "19:30", "20:30"]); // demo
 
@@ -243,7 +231,7 @@ function renderStepDayAndTime() {
          (t) =>
            `<button class="slot ${
              busy.has(t) ? "busy" : ""
-           }" data-time="${t}">${t}</button>`
+           }" data-time="${t}">${t}</button>`,
        )
        .join("")}
    </div>
@@ -272,11 +260,11 @@ function renderStepType() {
        .map(
          (n) => `
        <button class="slot primary" data-type="Vi spiller i ${n} time${
-           n > 1 ? "r" : ""
-         }">
+         n > 1 ? "r" : ""
+       }">
          Vi spiller i ${n} time${n > 1 ? "r" : ""}
        </button>
-     `
+     `,
        )
        .join("")}
    </div>
@@ -297,7 +285,7 @@ function renderStepConfirm() {
     : "";
   const humanDate = new Date(booking.date + "T00:00:00").toLocaleDateString(
     "da-DK",
-    { day: "numeric", month: "long", year: "numeric" }
+    { day: "numeric", month: "long", year: "numeric" },
   );
   bookingStage.innerHTML = `
    ${logo()}
@@ -342,7 +330,7 @@ function renderStepConfirm() {
 function renderStepSuccess() {
   const humanDate = new Date(booking.date + "T00:00:00").toLocaleDateString(
     "da-DK",
-    { day: "numeric", month: "long", year: "numeric" }
+    { day: "numeric", month: "long", year: "numeric" },
   );
   bookingStage.innerHTML = `
    ${logo()}
@@ -350,8 +338,8 @@ function renderStepSuccess() {
      <div class="success-big">Tak for din booking 😊</div>
      <div class="booking-summary" style="text-align:left">
        <div><strong>Sted</strong><br>${booking.cafe.name} – ${
-    booking.cafe.address
-  }</div>
+         booking.cafe.address
+       }</div>
        <div><strong>Dato</strong><br>${humanDate}</div>
        <div><strong>Tid</strong><br>${booking.time}</div>
        <div><strong>Antal gæster</strong><br>${booking.guests}</div>
@@ -361,7 +349,7 @@ function renderStepSuccess() {
        ${
          booking.note
            ? `<div><strong>Kommentar</strong><br>${escapeHtml(
-               booking.note
+               booking.note,
              )}</div>`
            : ""
        }
@@ -370,19 +358,13 @@ function renderStepSuccess() {
    </div>
  `;
   document.getElementById("done-btn").addEventListener("click", () => {
-    closeBooking();
-    // reset
-    booking.step = 1;
-    booking.cafe =
-      booking.guests =
-      booking.date =
-      booking.time =
-      booking.type =
-        null;
-    booking.name = booking.phone = booking.email = booking.note = "";
+    // Sender brugeren tilbage til forsiden efter gennemført booking.
+    window.location.href = "index.html";
   });
 }
 
 // Gør booking-funktionerne tilgængelige, så de også kan bruges i app.js
 window.openBooking = openBooking;
 window.closeBooking = closeBooking;
+// Starter bookingflowet automatisk på booking-siden.
+openBooking();
