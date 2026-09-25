@@ -108,7 +108,7 @@ function renderStepCafe() {
      ${CAFES.map(
        (c) => `
 <article class="booking-card" data-cafe="${c.id}" tabindex="0">
-         <img src="${c.img}" alt="">
+         <img src="${"images/lokation-card.webp"}" alt="">
          <h2>${c.name}</h2>
          <p>${c.address}</p>
        </article>
