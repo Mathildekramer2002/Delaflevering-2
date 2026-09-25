@@ -164,6 +164,7 @@ function bindEvents() {
     if (!bookingView?.hidden) closeBooking();
     SHOW_FAVS = false;
     setActiveTab(els.tabAll);
+    document.getElementById("page-title").textContent = "ALLE SPIL";
     render();
   });
 
@@ -186,6 +187,7 @@ function bindEvents() {
 
     SHOW_FAVS = true;
     setActiveTab(els.tabFav);
+    document.getElementById("page-title").textContent = "DINE FAVORITTER";
     render();
   });
 
@@ -531,10 +533,27 @@ function render() {
   const sorted = applySort(filtered, f.sort);
 
   if (!sorted.length) {
-    els.list.innerHTML = `<p style="color:#7b5647">Ingen spil matcher dine filtre.</p>`;
-    updateBackIcon();
-    return;
+  if (SHOW_FAVS && FAVS.size === 0) {
+    els.list.innerHTML = `
+      <div class="empty-favorites">
+        <h2>Du har endnu ingen favoritter</h2>
+        <p>Find alle dine yndlingsspil her</p>
+        <button type="button" id="show-all-games">SE ALLE SPIL</button>
+      </div>
+    `;
+    // Sender brugeren tilbage til visningen med alle spil.
+  document.getElementById("show-all-games")?.addEventListener("click", () => {
+  els.tabAll?.click();
+});
+  } else {
+    els.list.innerHTML = `
+      <p style="color:#7b5647">Ingen spil matcher dine filtre.</p>
+    `;
   }
+
+  updateBackIcon();
+  return;
+}
   els.list.innerHTML = sorted.map(gameCard).join("");
   updateFavTabCounter();
   updateBackIcon();

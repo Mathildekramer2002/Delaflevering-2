@@ -657,3 +657,11 @@ Jeg har:
 - beholdt grøn/rød markering ved "Ledig" og "Udlånt", da den gør spillets status nem at aflæse
 
 Modalens eksisterende opbygning og funktionalitet er bevaret. Efter ændringerne har jeg testet forskellige spil, visning af ledig/udlånt, spilleregler samt lukning med både X og Escape. Fokus vender fortsat tilbage til det valgte spilkort efter lukning.
+
+### Favoritvisning
+
+Favoritvisningen er tilpasset, så det er tydeligere for brugeren, hvilken del af appen der er åben. Overskriften skifter derfor fra "ALLE SPIL" til "DINE FAVORITTER", når favoritter vælges i bundnavigationen.
+
+Hvis brugeren ikke har gemt nogen favoritter, vises der nu en tom-tilstand med teksten "Du har endnu ingen favoritter" og en knap til "SE ALLE SPIL". Knappen fører tilbage til visningen med alle spil og genbruger den eksisterende navigation.
+
+Ændringen er testet med og uden gemte favoritter. Overskriften skifter korrekt mellem visningerne, og knappen i den tomme favoritvisning fører tilbage til alle spil.

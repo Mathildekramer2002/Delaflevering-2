@@ -755,3 +755,44 @@ button:focus-visible,
     font-size: 15px;
   }
 }
+
+/* Besked når brugeren ikke har nogen favoritter. */
+.empty-favorites {
+  width: 100%;
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 60px;
+}
+
+.empty-favorites h2 {
+  margin: 0 0 8px;
+  color: #572018;
+  font-size: 20px;
+}
+
+.empty-favorites p {
+  margin: 0 0 22px;
+  color: #572018;
+}
+
+/* Knap tilbage til alle spil. */
+#show-all-games {
+  min-width: 130px;
+  height: 48px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 999px;
+  background: #cbbab3;
+  color: #572018;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+#show-all-games:hover {
+  transform: scale(1.08);
+}
