@@ -659,14 +659,14 @@ function render() {
     updateBackIcon();
     return;
   }
-  els.list.innerHTML = sorted.map(gameCard).join("");
+  els.list.innerHTML = sorted.map((game) => gameCard(game)).join("");
   updateFavTabCounter();
   updateBackIcon();
 }
 
 // Opretter spillekortene.
 // tabindex="0" gør, at selve kortet kan få fokus ved navigation med tastatur.
-function gameCard(g) {
+function gameCard(g, headingLevel = 2) {
   const imageName = g.image.split("/").pop();
   const imageBase = imageName.replace(".webp", "");
   const favActive = FAVS.has(String(g.id)) ? "active" : "";
@@ -694,7 +694,7 @@ function gameCard(g) {
 </picture>
        <div class="badges">${badgeAvail}</div>
      </div>
-     <h3>${escapeHtml(g.title)}</h3>
+     <h${headingLevel}>${escapeHtml(g.title)}</h${headingLevel}>
      <div class="meta">
        <span>
           <img src="images/profile.svg" alt="">${players}
@@ -724,7 +724,7 @@ function renderPopularGames() {
     .sort((a, b) => (b.rating || 0) - (a.rating || 0))
     .slice(0, 6);
 
-  popularGames.innerHTML = games.map(gameCard).join("");
+  popularGames.innerHTML = games.map((game) => gameCard(game, 3)).join("");
 }
 
 // HELPERS

@@ -718,3 +718,66 @@ Markeringerne opdateres automatisk, når brugeren vælger eller fravælger et fi
 - Spiloversigten opdateres efter kombinationen af de valgte filtre.
 - På mobil skjules tags, mens fluebenene fortsat viser de aktive valg.
 - "RYD FILTRE" fjerner alle aktive filtre og deres visuelle markeringer.
+
+### Korrekt overskriftshierarki
+
+Ved eftertest med WAVE blev der fundet én alert om "Skipped heading level". Problemet opstod ved spillekortenes titler. På siden "Alle spil" var sidens titel en h1, mens spillenes titler var h3. Der manglede derfor et h2-niveau mellem sidens overskrift og de enkelte spil.
+
+![WAVE-test med skipped heading level](dokumentation/wave-en-fejl.png)
+
+*WAVE viste én alert, fordi overskriftshierarkiet sprang fra h1 til h3.*
+
+Spillekortene bruges både på siden "Alle spil" og på forsiden under "Populære spil". Derfor kunne det samme overskriftsniveau ikke anvendes begge steder. Funktionen `gameCard()` blev tilpasset, så overskriftsniveauet kan ændres alt efter, hvor kortet bliver vist.
+
+```js
+function gameCard(g, headingLevel = 2) {
+```
+
+Spillets titel bruger herefter værdien fra `headingLevel`:
+
+```js
+<h${headingLevel}>${escapeHtml(g.title)}</h${headingLevel}>
+```
+
+Som standard er værdien 2. På "Alle spil" og "Favoritter" bliver spillenes titler derfor h2, så strukturen følger sidens h1:
+
+```js
+els.list.innerHTML = sorted
+  .map((game) => gameCard(game))
+  .join("");
+```
+
+På forsiden ligger spillekortene derimod under h2-overskriften "Populære spil". Her kaldes funktionen med værdien 3, så spillenes titler bliver h3:
+
+```js
+popularGames.innerHTML = games
+  .map((game) => gameCard(game, 3))
+  .join("");
+```
+
+På den måde kan den samme `gameCard()`-funktion genbruges på forskellige visninger, samtidig med at overskriftshierarkiet tilpasses den enkelte sides struktur.
+
+CSS'en er samtidig tilpasset, så h2 og h3 i spillekortene har samme visuelle udseende, selvom de har forskellig semantisk betydning:
+
+```css
+.card h2,
+.card h3 {
+  margin: 12px 4px 6px;
+  font-size: 22px;
+  font-weight: 500;
+  color: #572018;
+}
+```
+
+Efter ændringen blev siden testet igen med WAVE. Testen viste 0 errors, 0 contrast errors og 0 alerts.
+
+![WAVE-test uden fejl og alerts](dokumentation/wave-ingen-fejl.png)
+
+*Efter ændringen registrerer WAVE ingen errors, contrast errors eller alerts.*
+
+**Test efter ændringer:**
+- Overskriftshierarkiet på "Alle spil" følger nu h1 → h2.
+- Spiltitlerne under "Populære spil" følger h2 → h3.
+- Den samme `gameCard()`-funktion kan fortsat genbruges på de forskellige visninger.
+- Spillekortenes visuelle udseende er bevaret på tværs af overskriftsniveauerne.
+- WAVE viser 0 errors, 0 contrast errors og 0 alerts.
