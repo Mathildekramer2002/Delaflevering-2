@@ -665,3 +665,27 @@ Favoritvisningen er tilpasset, så det er tydeligere for brugeren, hvilken del a
 Hvis brugeren ikke har gemt nogen favoritter, vises der nu en tom-tilstand med teksten "Du har endnu ingen favoritter" og en knap til "SE ALLE SPIL". Knappen fører tilbage til visningen med alle spil og genbruger den eksisterende navigation.
 
 Ændringen er testet med og uden gemte favoritter. Overskriften skifter korrekt mellem visningerne, og knappen i den tomme favoritvisning fører tilbage til alle spil.
+
+### Ny forside og tydeligere navigation
+
+I brugertesten havde flere testpersoner svært ved at gennemskue, hvad siden var til, når de kom ind på den. Den eksisterende løsning åbnede direkte på oversigten over alle spil og gav derfor ikke brugeren et tydeligt overblik over appens formål og muligheder.
+
+For at skabe et tydeligere udgangspunkt er der udviklet en ny forside, som nu fungerer som appens startvisning. Forsiden introducerer kort, hvad brugeren kan bruge løsningen til, og giver direkte adgang til de vigtigste funktioner.
+
+Forsiden indeholder:
+- En kort introduktion til spiludvalget og sidens funktion.
+- En genvej til "Alle spil".
+- En genvej til booking af bord.
+- En sektion med populære spil, så brugeren allerede fra forsiden kan gå på opdagelse i spiludvalget.
+
+De eksisterende spilkort genbruges under "Populære spil", så samme design og funktionalitet anvendes flere steder. Kortene kan åbnes med både mus og tastatur og bruger den eksisterende spilmodal.
+
+Forsiden er desuden gjort responsiv. På mindre skærme skjules billederne i genvejene for at give mere plads til det vigtigste indhold, mens billederne vises på større skærme.
+
+**Test efter ændringer:**
+- Forsiden vises som appens startvisning.
+- Navigationen mellem Hjem, Alle spil, Favoritter og Book bord fungerer.
+- "Se alle spil" fører til spiloversigten.
+- "Book bord" åbner det eksisterende booking-flow.
+- Populære spil vises og kan åbnes med både mus og tastatur.
+- Layoutet er testet på både små og store skærme.

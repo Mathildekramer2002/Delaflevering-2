@@ -735,6 +735,57 @@ button:focus-visible,
 /* På små skærme åbner filterets undermenu nedad
    i stedet for ud mod højre. */
 @media (max-width: 600px) {
+
+  .home-action-image {
+    height: 135px;
+  }
+    /* Forsidens genveje på mobil */
+    .home-action {
+    min-height: 135px;
+    grid-template-columns: 70px 1fr;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    }
+
+    .home-action-icon {
+      width: 45px;
+      height: 45px;
+    }
+  
+    .home-action-content {
+      padding: 12px 4px;
+    }
+
+    .home-intro h1 {
+      font-size: 20px;
+      white-space: normal;
+     }
+  
+     .home-action-content h2 {
+       margin-bottom: 6px;
+       font-size: 16px;
+     }
+  
+     .home-action-content p {
+       margin-bottom: 10px;
+       font-size: 11px;
+       line-height: 1.4;
+     }
+  
+    #home-games-button,
+    #home-booking-button {
+      min-width: 110px;
+      height: 32px;
+      padding: 0 10px;
+      font-size: 11px;
+    }
+  
+     /* Skjuler billederne i genvejene på små skærme. */
+     .home-action-image {
+       display: none;
+     }
+
+
   .filter-options {
     width: 190px;
   }
@@ -754,6 +805,26 @@ button:focus-visible,
     padding: 8px 10px;
     font-size: 15px;
   }
+
+
+    .home-popular {
+      margin-top: 30px;
+    }
+  
+    .home-popular h2 {
+      font-size: 22px;
+      margin-bottom: 14px;
+    }
+  
+    #popular-games {
+      gap: 12px;
+      overflow-x: auto;
+    }
+  
+    /* Mindre kort på forsiden, så man kan ane det næste. */
+    #popular-games .card {
+      flex: 0 0 145px;
+    }
 }
 
 /* Besked når brugeren ikke har nogen favoritter. */
@@ -795,4 +866,158 @@ button:focus-visible,
 
 #show-all-games:hover {
   transform: scale(1.08);
+}
+
+/* ---------- FORSIDE ---------- */
+
+.home-view {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 28px 24px 110px;
+}
+
+/* Intro på forsiden */
+.home-intro {
+  text-align: center;
+  color: #572018;
+}
+
+.home-intro img {
+  width: 105px;
+  height: auto;
+  display: block;
+  margin: 0 auto 18px;
+}
+
+.home-intro h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.home-intro p {
+  max-width: 620px;
+  margin: 0 auto 32px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+
+/* ---------- FORSIDENS GENVEJE ---------- */
+
+/* Fælles design for Find et spil og Book bord. */
+.home-action {
+  width: 100%;
+  min-height: 160px;
+  display: grid;
+  grid-template-columns: 110px 1fr 280px;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 22px;
+  margin-bottom: 32px;
+  color: #fff8f0;
+}
+
+/* Find et spil */
+.home-games {
+  background: #572018;
+}
+
+/* Book bord */
+.home-booking {
+  background: #96736f;
+}
+
+/* Ikon i venstre side */
+.home-action-icon {
+  width: 70px;
+  height: 70px;
+  justify-self: center;
+}
+
+/* Tekst i midten */
+.home-action-content {
+  text-align: center;
+  padding: 20px 10px;
+}
+
+.home-action-content h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.home-action-content p {
+  margin: 0 0 14px;
+  line-height: 1.5;
+}
+
+/* Knapper */
+#home-games-button,
+#home-booking-button {
+  min-width: 150px;
+  height: 40px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 999px;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+#home-games-button {
+  background: #96736f;
+  color: #fff8f0;
+}
+
+#home-booking-button {
+  background: #fff8f0;
+  color: #572018;
+}
+
+#home-games-button:hover,
+#home-booking-button:hover {
+  transform: scale(1.08);
+}
+.home-action-image {
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  object-fit: cover;
+  object-position: center;
+  align-self: stretch;
+  display: block;
+}
+
+/* Populære spil på forsiden */
+.home-popular {
+  margin-top: 30px;
+}
+
+.home-popular h2 {
+  margin: 0 0 18px;
+  color: #572018;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+#popular-games {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  padding: 4px 4px 18px;
+  scroll-snap-type: x proximity;
+}
+
+#popular-games .card {
+  flex: 0 0 190px;
+  scroll-snap-align: start;
+}
+
+/* Skjuler billederne i forsidens bokse på små skærme. */
+@media (max-width: 600px) {
+  .home-action-image {
+    display: none;
+  }
 }

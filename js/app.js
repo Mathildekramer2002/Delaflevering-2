@@ -15,6 +15,7 @@ const els = {
   // Søg + liste
   search: document.getElementById("search-input"),
   list: document.getElementById("game-list"),
+  popularGames: document.getElementById("popular-games"),
 
   // Skjult lager (selects/inputs – vises ikke i UI)
   genre: document.getElementById("genre-select"),
@@ -47,7 +48,9 @@ const mRules = document.getElementById("modal-rules");
 const rulesBtn = document.getElementById("rules-toggle");
 const rulesContent = document.getElementById("rules-content");
 
-
+// De to hovedvisninger i appen.
+const homeView = document.getElementById("home-view");
+const gamesView = document.getElementById("games-view");
 
 // HJÆLPEFUNKTION: sørg for skjulte pill-inputs findes
 
@@ -87,6 +90,7 @@ async function init() {
     hydrateSelects(GAMES);
     bindEvents();
     render();
+    renderPopularGames();
   } catch (err) {
     console.error(err);
     els.list.innerHTML = `<p>Kunne ikke indlæse spil.</p>`;
@@ -122,7 +126,8 @@ function bindEvents() {
   els.clear?.addEventListener("click", clearAllFilters);
 
   // Klik i grid: ❤️ eller åbn modal
-  els.list.addEventListener("click", (e) => {
+  [els.list, els.popularGames].forEach((list) => {
+  list?.addEventListener("click", (e) => {
     // Toggle fav
     const favBtn = e.target.closest("button.fav[data-fav-id]");
     if (favBtn) {
@@ -133,22 +138,22 @@ function bindEvents() {
         favBtn.classList.remove("active");
         favBtn.setAttribute("aria-label", "Tilføj til favoritter");
 
-  // Giver skærmlæseren besked om, at spillet er fjernet.
-  const feedback = document.getElementById("filter-feedback");
-  if (feedback) {
-    feedback.textContent = "Fjernet fra favoritter";
-  }
-} else {
-  FAVS.add(id);
-  favBtn.classList.add("active");
-  favBtn.setAttribute("aria-label", "Fjern fra favoritter");
+        // Giver skærmlæseren besked om, at spillet er fjernet.
+        const feedback = document.getElementById("filter-feedback");
+        if (feedback) {
+          feedback.textContent = "Fjernet fra favoritter";
+        }
+      } else {
+        FAVS.add(id);
+        favBtn.classList.add("active");
+        favBtn.setAttribute("aria-label", "Fjern fra favoritter");
 
-  // Giver skærmlæseren besked om, at spillet er tilføjet.
-  const feedback = document.getElementById("filter-feedback");
-  if (feedback) {
-    feedback.textContent = "Tilføjet til favoritter";
-  }
-}
+        // Giver skærmlæseren besked om, at spillet er tilføjet.
+        const feedback = document.getElementById("filter-feedback");
+        if (feedback) {
+          feedback.textContent = "Tilføjet til favoritter";
+        }
+      }
       localStorage.setItem(STORAGE_KEY, JSON.stringify([...FAVS]));
       updateFavTabCounter();
       if (SHOW_FAVS) render();
@@ -156,13 +161,16 @@ function bindEvents() {
     }
     // Åbn modal
     const card = e.target.closest(".card[data-id]");
-    if (card) openModalById(card.dataset.id);
+   if (card) openModalById(card.dataset.id);
   });
+});
 
   // Tabbar
   els.tabAll?.addEventListener("click", () => {
     if (!bookingView?.hidden) closeBooking();
     SHOW_FAVS = false;
+    homeView.hidden = true;
+    gamesView.hidden = false;
     setActiveTab(els.tabAll);
     document.getElementById("page-title").textContent = "ALLE SPIL";
     render();
@@ -171,21 +179,25 @@ function bindEvents() {
   // Gør det muligt at åbne et spillekort med Enter, når selve kortet har fokus.
   // e.target === card gør, at Enter på favorit-hjertet ikke også åbner spillet.
 
- els.list.addEventListener("keydown", (e) => {
-  const card = e.target.closest(".card[data-id]");
+  [els.list, els.popularGames].forEach((list) => {
+    list?.addEventListener("keydown", (e) => {
+      const card = e.target.closest(".card[data-id]");
 
-  if (card && e.target === card && e.key === "Enter") {
-    e.preventDefault();
-    e.stopPropagation();
-    openModalById(card.dataset.id);
-  }
-});
+      if (card && e.target === card && e.key === "Enter") {
+        e.preventDefault();
+        e.stopPropagation();
+        openModalById(card.dataset.id);
+      }
+    });
+  });
 
   els.tabFav?.addEventListener("click", () => {
     // Lukker bookingvisningen, hvis brugeren går direkte til favoritter.
     if (!bookingView?.hidden) closeBooking();
 
     SHOW_FAVS = true;
+    homeView.hidden = true;
+    gamesView.hidden = false;
     setActiveTab(els.tabFav);
     document.getElementById("page-title").textContent = "DINE FAVORITTER";
     render();
@@ -198,9 +210,14 @@ function bindEvents() {
 
   els.tabHome?.addEventListener("click", () => {
     if (!bookingView?.hidden) closeBooking();
+
     SHOW_FAVS = false;
-    setActiveTab(null);
-    render();
+
+    // Viser forsiden og skjuler spiloversigten.
+    homeView.hidden = false;
+    gamesView.hidden = true;
+
+    setActiveTab(els.tabHome);
   });
 
   // Tilbageknap – luk modal/booking hvis åbne
@@ -216,17 +233,25 @@ function bindEvents() {
     // ellers ingen handling
   });
 
-// Starter dropdown til sortering.
-setupDropdownFilters();
+  // Starter dropdown til sortering.
+  setupDropdownFilters();
 
-// Starter den nye samlede filtermenu.
-setupFilterMenu();
+  // Starter den nye samlede filtermenu.
+  setupFilterMenu();
+  // Knap på forsiden åbner siden med alle spil.
+  document
+    .getElementById("home-games-button")
+    ?.addEventListener("click", () => {
+      els.tabAll?.click();
+    });
 
+  // Knap på forsiden åbner den eksisterende booking.
+  document
+    .getElementById("home-booking-button")
+    ?.addEventListener("click", () => {
+      document.getElementById("tab-reserve")?.click();
+    });
 }
-
-
-
-
 
 function setFilter(type, rawValue) {
   if (type === "genre") {
@@ -267,19 +292,6 @@ function setFilter(type, rawValue) {
 
   return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Styrer den samlede filtermenu med mus og tastatur.
 function setupFilterMenu() {
@@ -368,24 +380,24 @@ function setupFilterMenu() {
 
     // Enter på en filtermulighed vælger filteret.
     // Et klik på en filtermulighed vælger filteret.
-choices.forEach((choice) => {
-  choice.addEventListener("click", () => {
-    const type = choice.dataset.filter;
-    const value = choice.dataset.value;
+    choices.forEach((choice) => {
+      choice.addEventListener("click", () => {
+        const type = choice.dataset.filter;
+        const value = choice.dataset.value;
 
-    // Gemmer det valgte filter.
-    setFilter(type, value);
+        // Gemmer det valgte filter.
+        setFilter(type, value);
 
-    // Opdaterer spillelisten med det valgte filter.
-    render();
+        // Opdaterer spillelisten med det valgte filter.
+        render();
 
-    // Lukker filtermenuen efter valget.
-    closeFilterMenu();
+        // Lukker filtermenuen efter valget.
+        closeFilterMenu();
 
-    // Sender fokus tilbage til FILTRE efter valget.
-    filterButton.focus();
-  });
-  });
+        // Sender fokus tilbage til FILTRE efter valget.
+        filterButton.focus();
+      });
+    });
   });
 
   // Escape lukker menuen og sender fokus tilbage.
@@ -449,8 +461,8 @@ function clearAllFilters() {
   // Giver skærmlæseren besked om, at filtrene er blevet ryddet.
   const feedback = document.getElementById("filter-feedback");
   if (feedback) {
-  feedback.textContent = "Filtre er ryddet";
-}
+    feedback.textContent = "Filtre er ryddet";
+  }
 }
 
 // FILTER / SORT
@@ -533,27 +545,29 @@ function render() {
   const sorted = applySort(filtered, f.sort);
 
   if (!sorted.length) {
-  if (SHOW_FAVS && FAVS.size === 0) {
-    els.list.innerHTML = `
+    if (SHOW_FAVS && FAVS.size === 0) {
+      els.list.innerHTML = `
       <div class="empty-favorites">
         <h2>Du har endnu ingen favoritter</h2>
         <p>Find alle dine yndlingsspil her</p>
         <button type="button" id="show-all-games">SE ALLE SPIL</button>
       </div>
     `;
-    // Sender brugeren tilbage til visningen med alle spil.
-  document.getElementById("show-all-games")?.addEventListener("click", () => {
-  els.tabAll?.click();
-});
-  } else {
-    els.list.innerHTML = `
+      // Sender brugeren tilbage til visningen med alle spil.
+      document
+        .getElementById("show-all-games")
+        ?.addEventListener("click", () => {
+          els.tabAll?.click();
+        });
+    } else {
+      els.list.innerHTML = `
       <p style="color:#7b5647">Ingen spil matcher dine filtre.</p>
     `;
-  }
+    }
 
-  updateBackIcon();
-  return;
-}
+    updateBackIcon();
+    return;
+  }
   els.list.innerHTML = sorted.map(gameCard).join("");
   updateFavTabCounter();
   updateBackIcon();
@@ -561,19 +575,19 @@ function render() {
 
 // Opretter spillekortene.
 // tabindex="0" gør, at selve kortet kan få fokus ved navigation med tastatur.
-  function gameCard(g) {
-    const imageName = g.image.split("/").pop();
-    const imageBase = imageName.replace(".webp", "");
-    const favActive = FAVS.has(String(g.id)) ? "active" : "";
-    // Fortæller skærmlæseren, om spillet kan tilføjes eller fjernes fra favoritter.
-    const favLabel = FAVS.has(String(g.id))
-      ? "Fjern fra favoritter"
-      : "Tilføj til favoritter";    
-    const players = g.players ? `${g.players.min}–${g.players.max}` : "—";
-    const rating = Number.isFinite(g.rating) ? g.rating.toFixed(1) : "—";
-    const badgeAvail = g.available ? `<span class="badge">Ledig</span>` : ``;
+function gameCard(g) {
+  const imageName = g.image.split("/").pop();
+  const imageBase = imageName.replace(".webp", "");
+  const favActive = FAVS.has(String(g.id)) ? "active" : "";
+  // Fortæller skærmlæseren, om spillet kan tilføjes eller fjernes fra favoritter.
+  const favLabel = FAVS.has(String(g.id))
+    ? "Fjern fra favoritter"
+    : "Tilføj til favoritter";
+  const players = g.players ? `${g.players.min}–${g.players.max}` : "—";
+  const rating = Number.isFinite(g.rating) ? g.rating.toFixed(1) : "—";
+  const badgeAvail = g.available ? `<span class="badge">Ledig</span>` : ``;
 
-    return `
+  return `
     <article class="card" data-id="${g.id}" tabindex="0" role="button" aria-label="${escapeHtml(g.title)}">
      <div class="thumb">
        <picture>
@@ -603,10 +617,23 @@ function render() {
        ${g.shelf ? `<span>Placering: ${escapeHtml(g.shelf)}</span>` : ""}
      </div>
       <button class="fav ${favActive}" data-fav-id="${
-    g.id
-  }" aria-label="${favLabel}">❤</button>
+        g.id
+      }" aria-label="${favLabel}">❤</button>
    </article>
  `;
+}
+
+// Viser de bedst bedømte spil på forsiden.
+function renderPopularGames() {
+  const popularGames = document.getElementById("popular-games");
+
+  if (!popularGames || !GAMES.length) return;
+
+  const games = [...GAMES]
+    .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+    .slice(0, 6);
+
+  popularGames.innerHTML = games.map(gameCard).join("");
 }
 
 // HELPERS
@@ -622,7 +649,7 @@ function fillUniqueOptions(select, arr) {
 }
 function unique(arr) {
   return [...new Set(arr.filter(Boolean))].sort((a, b) =>
-    String(a).localeCompare(String(b), "da")
+    String(a).localeCompare(String(b), "da"),
   );
 }
 function escapeHtml(s) {
@@ -650,26 +677,24 @@ function openModalById(id) {
   mImg.src = g.image;
   mImg.alt = g.title;
 
- // Viser de vigtigste informationer om spillet.
-mMeta.innerHTML = [
-  Number.isFinite(g.rating)
-    ? `<span><img src="images/star.svg" alt=""> ${g.rating.toFixed(1)}</span>`
-    : null,
+  // Viser de vigtigste informationer om spillet.
+  mMeta.innerHTML = [
+    Number.isFinite(g.rating)
+      ? `<span><img src="images/star.svg" alt=""> ${g.rating.toFixed(1)}</span>`
+      : null,
 
-  g.players
-    ? `<span><img src="images/profile.svg" alt=""> ${g.players.min}–${g.players.max}</span>`
-    : null,
+    g.players
+      ? `<span><img src="images/profile.svg" alt=""> ${g.players.min}–${g.players.max}</span>`
+      : null,
 
-  Number.isFinite(g.playtime)
-    ? `<span><img src="images/ur.svg" alt=""> ${g.playtime} min</span>`
-    : null,
+    Number.isFinite(g.playtime)
+      ? `<span><img src="images/ur.svg" alt=""> ${g.playtime} min</span>`
+      : null,
 
-  g.age
-    ? `<span>${g.age}+</span>`
-    : null,
-]
-  .filter(Boolean)
-  .join("");
+    g.age ? `<span>${g.age}+</span>` : null,
+  ]
+    .filter(Boolean)
+    .join("");
 
   // Beskrivelse + detaljer
   mDesc.textContent = g.description || "";
@@ -696,8 +721,8 @@ mMeta.innerHTML = [
 
   // Flytter fokus til luk-knappen, når modalen er blevet vist.
   requestAnimationFrame(() => {
-  modal.querySelector(".modal-close").focus();
-});
+    modal.querySelector(".modal-close").focus();
+  });
 }
 
 function closeModal() {
@@ -724,7 +749,6 @@ modal?.addEventListener("click", (e) => {
     closeModal();
   }
 });
-
 
 // Tastaturstyring i modalvinduet.
 // Escape lukker modalen, og Tab/Shift + Tab holder fokus mellem
@@ -757,13 +781,13 @@ function setupDropdownFilters() {
   const row = document.querySelector(".filterbar");
   let openDD = null;
   let floatingMenu = null;
-    // Gemmer den knap der åbnede dropdown-menuen, så fokus kan komme tilbage til den efter et valg.
+  // Gemmer den knap der åbnede dropdown-menuen, så fokus kan komme tilbage til den efter et valg.
   let activePill = null;
 
   function openDropdown(dd, pill) {
     closeDropdown();
     // Gemmer den knap brugeren åbner dropdown-menuen fra, så fokus kan komme tilbage til den efter et valg.
-activePill = pill;
+    activePill = pill;
     dd.classList.add("open");
     const menu = dd.querySelector(".dropdown-menu");
     if (!menu) return;
@@ -798,7 +822,7 @@ activePill = pill;
     if (floatingMenu && openDD.__menuPlaceholder) {
       openDD.__menuPlaceholder.parentNode.insertBefore(
         floatingMenu,
-        openDD.__menuPlaceholder
+        openDD.__menuPlaceholder,
       );
       openDD.__menuPlaceholder.remove();
       floatingMenu.classList.remove("dropdown-floating");
@@ -812,125 +836,125 @@ activePill = pill;
   }
 
   // Åbn/luk dropdowns
-row?.addEventListener("pointerdown", (e) => {
-  const pill = e.target.closest(".filter-dropdown .pill");
-  if (!pill) return;
+  row?.addEventListener("pointerdown", (e) => {
+    const pill = e.target.closest(".filter-dropdown .pill");
+    if (!pill) return;
 
-  e.preventDefault();
-  e.stopPropagation();
-
-  const dd = pill.closest(".filter-dropdown");
-
-  if (openDD === dd) {
-    closeDropdown();
-  } else {
-    openDropdown(dd, pill);
-  }
-});
-
-// Gør det muligt at åbne og lukke dropdowns med Enter.
-row?.addEventListener("keydown", (e) => {
-  const pill = e.target.closest(".filter-dropdown .pill");
-  if (!pill || e.key !== "Enter") return;
-
-  e.preventDefault();
-
-  const dd = pill.closest(".filter-dropdown");
-
- if (openDD === dd) {
-  closeDropdown();
-} else {
-  openDropdown(dd, pill);
-
-  // Flytter fokus til den første valgmulighed i den åbne dropdown.
-  const firstOption = floatingMenu?.querySelector("button");
-  firstOption?.focus();
-}
-});
-
-// Holder fokus inde i den dropdown der er åben.
-// Først når dropdownen lukkes, kan Tab gå videre til næste filter.
-document.addEventListener("keydown", (e) => {
-  if (e.key !== "Tab" || !openDD || !floatingMenu) return;
-
-  // Finder knappen til den dropdown der er åben.
-  const filterButton = openDD.querySelector(".pill");
-
-  // Finder alle valgmuligheder i den åbne dropdown.
-  const options = Array.from(
-    floatingMenu.querySelectorAll("button:not([disabled])")
-  );
-
-  if (!filterButton || options.length === 0) return;
-
-  const firstOption = options[0];
-  const lastOption = options[options.length - 1];
-  const currentFocus = document.activeElement;
-
-  // Tab fra sidste valg går tilbage til filterknappen.
-  if (!e.shiftKey && currentFocus === lastOption) {
     e.preventDefault();
-    filterButton.focus();
-    return;
-  }
+    e.stopPropagation();
 
-  // Tab fra filterknappen går til første valg.
-  if (!e.shiftKey && currentFocus === filterButton) {
-    e.preventDefault();
-    firstOption.focus();
-    return;
-  }
+    const dd = pill.closest(".filter-dropdown");
 
-  // Shift + Tab fra første valg går tilbage til filterknappen.
-  if (e.shiftKey && currentFocus === firstOption) {
-    e.preventDefault();
-    filterButton.focus();
-    return;
-  }
+    if (openDD === dd) {
+      closeDropdown();
+    } else {
+      openDropdown(dd, pill);
+    }
+  });
 
-  // Shift + Tab fra filterknappen går til sidste valg.
-  if (e.shiftKey && currentFocus === filterButton) {
+  // Gør det muligt at åbne og lukke dropdowns med Enter.
+  row?.addEventListener("keydown", (e) => {
+    const pill = e.target.closest(".filter-dropdown .pill");
+    if (!pill || e.key !== "Enter") return;
+
     e.preventDefault();
-    lastOption.focus();
-  }
-});
+
+    const dd = pill.closest(".filter-dropdown");
+
+    if (openDD === dd) {
+      closeDropdown();
+    } else {
+      openDropdown(dd, pill);
+
+      // Flytter fokus til den første valgmulighed i den åbne dropdown.
+      const firstOption = floatingMenu?.querySelector("button");
+      firstOption?.focus();
+    }
+  });
+
+  // Holder fokus inde i den dropdown der er åben.
+  // Først når dropdownen lukkes, kan Tab gå videre til næste filter.
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Tab" || !openDD || !floatingMenu) return;
+
+    // Finder knappen til den dropdown der er åben.
+    const filterButton = openDD.querySelector(".pill");
+
+    // Finder alle valgmuligheder i den åbne dropdown.
+    const options = Array.from(
+      floatingMenu.querySelectorAll("button:not([disabled])"),
+    );
+
+    if (!filterButton || options.length === 0) return;
+
+    const firstOption = options[0];
+    const lastOption = options[options.length - 1];
+    const currentFocus = document.activeElement;
+
+    // Tab fra sidste valg går tilbage til filterknappen.
+    if (!e.shiftKey && currentFocus === lastOption) {
+      e.preventDefault();
+      filterButton.focus();
+      return;
+    }
+
+    // Tab fra filterknappen går til første valg.
+    if (!e.shiftKey && currentFocus === filterButton) {
+      e.preventDefault();
+      firstOption.focus();
+      return;
+    }
+
+    // Shift + Tab fra første valg går tilbage til filterknappen.
+    if (e.shiftKey && currentFocus === firstOption) {
+      e.preventDefault();
+      filterButton.focus();
+      return;
+    }
+
+    // Shift + Tab fra filterknappen går til sidste valg.
+    if (e.shiftKey && currentFocus === filterButton) {
+      e.preventDefault();
+      lastOption.focus();
+    }
+  });
 
   // Klik på menupunkt
-document.addEventListener("click", (e) => {
-  const item = e.target.closest(".dropdown-menu button");
-  if (!item) return;
+  document.addEventListener("click", (e) => {
+    const item = e.target.closest(".dropdown-menu button");
+    if (!item) return;
 
-  // Sortering
-  if (item.dataset.sortValue) {
-    if (els.sort) {
-      els.sort.value = item.dataset.sortValue;
+    // Sortering
+    if (item.dataset.sortValue) {
+      if (els.sort) {
+        els.sort.value = item.dataset.sortValue;
+      }
+
+      // Vis den valgte sortering på knappen
+      const sortButton = document.getElementById("sort-button");
+      if (sortButton) {
+        sortButton.textContent = `${item.textContent}`;
+      }
+
+      render();
+      closeDropdown();
+      // Sender fokus tilbage til den dropdown-knap brugeren kom fra.
+      activePill?.focus();
+      e.stopPropagation();
+      return;
     }
 
-    // Vis den valgte sortering på knappen
-    const sortButton = document.getElementById("sort-button");
-    if (sortButton) {
-      sortButton.textContent = `${item.textContent}`;
-    }
+    // Filtrering
+    const ok = setFilter(item.dataset.filter, item.dataset.value);
 
-    render();
+    if (ok) render();
     closeDropdown();
-    // Sender fokus tilbage til den dropdown-knap brugeren kom fra.
-    activePill?.focus();
-    e.stopPropagation();
-    return;
-  }
-
-  // Filtrering
-  const ok = setFilter(item.dataset.filter, item.dataset.value);
-
-  if (ok) render();
-  closeDropdown();
-  // Sender fokus tilbage til den dropdown-knap brugeren kom fra, når menuen er blevet lukket.
+    // Sender fokus tilbage til den dropdown-knap brugeren kom fra, når menuen er blevet lukket.
     requestAnimationFrame(() => {
-    activePill?.focus();
-});
-  e.stopPropagation();
-});
+      activePill?.focus();
+    });
+    e.stopPropagation();
+  });
 
   // Klik udenfor lukker
   document.addEventListener("pointerdown", (e) => {
@@ -940,7 +964,6 @@ document.addEventListener("click", (e) => {
     if (!inside && !inMenu) closeDropdown();
   });
 }
-
 
 // Tilbageknap – kun synlig når modal eller booking er åben
 

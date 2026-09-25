@@ -20,7 +20,89 @@
   <div id="booking-stage" class="booking-stage"></div>
 </section>
 
-  <main class="page">
+<!-- Forside -->
+<!-- Forside -->
+<main id="home-view" class="home-view">
+
+  <!-- Intro på forsiden -->
+  <section class="home-intro">
+    <img src="images/logo.webp" alt="Spilcaféen">
+
+    <h1>FIND JERES NÆSTE SPIL</h1>
+
+    <p>
+      Gå på opdagelse i alle vores spil. Søg, filtrér og find et spil der
+      passer til jer. Find spillet på hylden og hav en hyggelig stund.
+    </p>
+  </section>
+
+
+  <!-- Genvej til alle spil -->
+  <section class="home-action home-games">
+
+    <!-- Ikon -->
+    <img class="home-action-icon" src="images/games-lys.svg" alt="" aria-hidden="true">
+
+    <!-- Tekst og knap -->
+    <div class="home-action-content">
+      <h2>FIND ET SPIL</h2>
+
+      <p>
+        Søg, filtrér og find spil,<br>
+        der passer til jer
+      </p>
+
+      <button type="button" id="home-games-button">
+        SE ALLE SPIL
+      </button>
+    </div>
+
+    <!-- Billede -->
+    <img class="home-action-image" src="images/forside1.png" alt="">
+
+  </section>
+
+
+  <!-- Genvej til booking -->
+  <section class="home-action home-booking">
+
+    <!-- Ikon -->
+    <img class="home-action-icon" src="images/kalender-lys.svg" alt="" aria-hidden="true">
+
+    <!-- Tekst og knap -->
+    <div class="home-action-content">
+      <h2>BOOK BORD</h2>
+
+      <p>
+        Book et bord, og gør jer<br>
+        klar til en hyggelig spilleaftens
+      </p>
+
+      <button type="button" id="home-booking-button">
+        BOOK BORD
+      </button>
+    </div>
+
+    <!-- Billede -->
+    <img class="home-action-image" src="images/forside2.png" alt="">
+
+  </section>
+
+
+  <!-- Populære spil -->
+  <section class="home-popular">
+
+    <h2>Populære spil</h2>
+
+    <!-- Spilkortene indsættes senere med JavaScript -->
+    <div id="popular-games"></div>
+
+  </section>
+
+</main>
+
+
+<main id="games-view" class="page" hidden>
 
     <!-- Overskrift på siden med alle spil. -->
     <div class="games-heading">
