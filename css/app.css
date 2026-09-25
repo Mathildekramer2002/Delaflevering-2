@@ -457,11 +457,11 @@ body {
 .modal-card {
   position: relative;
   z-index: 1;
-  background: var(--brown);
-  color: #fff;
+  background: #f8f0e7;
+  color: #572018;
   border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: var(--shadow);
+  border: none;
+  box-shadow: 0 6px 10px rgba(87, 32, 24, 0.28);
   width: min(920px, 100%);
   display: flex;
   flex-direction: column;
@@ -473,9 +473,9 @@ body {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #fff;
+background: #f8f0e7;
+  border: 2px solid #572018;
+  color: #572018;
   border-radius: 999px;
   font-size: 22px;
   line-height: 1;
@@ -485,12 +485,12 @@ body {
 
 .modal-media {
   flex: 0 0 auto;
-  background: #1a1a1a7b;
+  background: #cbbab3;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: none;
 }
 
 .modal-media img {
@@ -521,6 +521,18 @@ body {
   flex-wrap: wrap;
 }
 
+/* Ikoner ved rating, spillere og spilletid i modalvinduet. */
+.modal-meta span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.modal-meta img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
 .modal-details {
   display: grid;
   gap: 6px;
@@ -534,7 +546,7 @@ body {
 .rules-btn {
   background: none;
   border: none;
-  color: #fff;
+  color: #572018;
   font-weight: 600;
   cursor: pointer;
   margin-top: 1rem;
@@ -546,7 +558,7 @@ body {
 }
 
 .rules-btn:hover {
-  color: #ffd479;
+  opacity: 0.7;
 }
 
 .rules-btn[aria-expanded="true"]::before {
@@ -568,7 +580,7 @@ body {
 }
 
 #modal-rules {
-  background: rgba(255, 255, 255, 0.05);
+  background: #cbbab3;
   padding: 0.75rem;
   border-radius: 6px;
   white-space: pre-wrap;

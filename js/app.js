@@ -631,25 +631,34 @@ function openModalById(id) {
   mImg.src = g.image;
   mImg.alt = g.title;
 
-  // Titel + meta
-  mTitle.textContent = g.title;
-  mMeta.innerHTML = [
-    Number.isFinite(g.rating) ? `⭐ ${g.rating.toFixed(1)}` : null,
-    g.players ? `👥 ${g.players.min}–${g.players.max}` : null,
-    Number.isFinite(g.playtime) ? `⏱️ ${g.playtime} min` : null,
-    g.age ? `👶 ${g.age}+` : null,
-  ]
-    .filter(Boolean)
-    .map((x) => `<span>${x}</span>`)
-    .join("");
+ // Viser de vigtigste informationer om spillet.
+mMeta.innerHTML = [
+  Number.isFinite(g.rating)
+    ? `<span><img src="images/star.svg" alt=""> ${g.rating.toFixed(1)}</span>`
+    : null,
+
+  g.players
+    ? `<span><img src="images/profile.svg" alt=""> ${g.players.min}–${g.players.max}</span>`
+    : null,
+
+  Number.isFinite(g.playtime)
+    ? `<span><img src="images/ur.svg" alt=""> ${g.playtime} min</span>`
+    : null,
+
+  g.age
+    ? `<span>${g.age}+</span>`
+    : null,
+]
+  .filter(Boolean)
+  .join("");
 
   // Beskrivelse + detaljer
   mDesc.textContent = g.description || "";
   mDetails.innerHTML = [
-    g.genre ? `<span>🎭 Kategori: ${escapeHtml(g.genre)}</span>` : "",
-    g.language ? `<span>🗣️ Sprog: ${escapeHtml(g.language)}</span>` : "",
-    g.difficulty ? `<span>🎯 Sværhed: ${escapeHtml(g.difficulty)}</span>` : "",
-    g.shelf ? `<span>📍 Placering: ${escapeHtml(g.shelf)}</span>` : "",
+    g.genre ? `<span> Kategori: ${escapeHtml(g.genre)}</span>` : "",
+    g.language ? `<span> Sprog: ${escapeHtml(g.language)}</span>` : "",
+    g.difficulty ? `<span> Sværhed: ${escapeHtml(g.difficulty)}</span>` : "",
+    g.shelf ? `<span> Placering: ${escapeHtml(g.shelf)}</span>` : "",
     g.available != null
       ? `<span>${g.available ? "✅ Ledig" : "❌ Udlånt"}</span>`
       : "",

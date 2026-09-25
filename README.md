@@ -643,3 +643,17 @@ Søgefelt, filtrering, sortering, ryd filtre og navigation fungerede med VoiceOv
 Under testen opdagede jeg dog, at VoiceOver kunne fokusere på spilkortene, men ikke fortalte, hvilket spil det enkelte kort repræsenterede. Derfor tilføjede jeg spillets titel som `aria-label` på kortet.
 
 Jeg tilføjede også `role="button"`, da hele spilkortet kan aktiveres for at åbne information om spillet. Efter ændringen læser VoiceOver spillets navn op og fortæller, at elementet fungerer som en knap.
+
+### Tilpasning af spilmodal
+
+Spilmodalens visuelle design er tilpasset, så den passer sammen med de små spilkort og resten af det nye design på siden.
+
+Jeg har:
+- ændret modalens farver, så den bruger samme cremefarvede og støvede nuancer som spilkortene
+- tilpasset luk-knappen og visningen af spilleregler til de nye farver
+- erstattet emojis ved rating, antal spillere og spilletid med de samme ikoner, som bruges på spilkortene
+- fjernet ikonet ved alder, så alderen kun vises som fx "7+"
+- fjernet emojis ved kategori, sprog, sværhedsgrad og placering for at gøre informationerne mere rolige og ensartede
+- beholdt grøn/rød markering ved "Ledig" og "Udlånt", da den gør spillets status nem at aflæse
+
+Modalens eksisterende opbygning og funktionalitet er bevaret. Efter ændringerne har jeg testet forskellige spil, visning af ledig/udlånt, spilleregler samt lukning med både X og Escape. Fokus vender fortsat tilbage til det valgte spilkort efter lukning.
