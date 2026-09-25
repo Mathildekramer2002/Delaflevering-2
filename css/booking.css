@@ -56,12 +56,12 @@
 }
 
 .booking-card {
-    background: var(--brown);
-    color: #fff;
+    background: #f8f0e7;
+    color: #572018;
     border-radius: 14px;
     padding: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: var(--shadow);
+    border: none;
+    box-shadow: 0 4px 10px rgba(87, 32, 24, 0.15);
     cursor: pointer;
 }
 
