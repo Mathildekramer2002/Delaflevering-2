@@ -609,12 +609,11 @@ button:focus-visible,
   outline-offset: 4px;
 }
 
-/* Fokusmarkering omkring søgeboksen, når brugeren navigerer ind i søgefeltet. */
-.searchbar:focus-within {
+/* Viser fokusmarkering på søgefeltet ved tastaturnavigation. */
+body.keyboard-navigation .searchbar:focus-within {
   outline: 3px dashed #e00000;
   outline-offset: 4px;
-}
-
+} 
 
 /* Markerer den valgte mulighed i filtermenuen. */
 .filter-submenu button.selected-filter {

@@ -52,11 +52,6 @@ function openBooking() {
 
   booking.step = 1;
   renderBooking();
-
-  // Flytter fokus til den første café.
-  requestAnimationFrame(() => {
-    bookingStage.querySelector("[data-cafe]")?.focus();
-  });
 }
 
 function closeBooking() {

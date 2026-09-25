@@ -1036,3 +1036,15 @@ function updateBackIcon() {
   if (!els.backBtn) return;
   els.backBtn.style.visibility = isHomeView() ? "hidden" : "visible";
 }
+
+// Registrerer om brugeren navigerer med tastaturet.
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Tab") {
+    document.body.classList.add("keyboard-navigation");
+  }
+});
+
+// Fjerner tastaturmarkeringen igen, når brugeren bruger musen.
+document.addEventListener("pointerdown", () => {
+  document.body.classList.remove("keyboard-navigation");
+});
