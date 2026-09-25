@@ -799,3 +799,17 @@ Navigationen i bunden er tilpasset, så man kan navigere mellem de forskellige H
 Efter opdelingen testede jeg, at navigationen og funktionerne stadig virkede på de forskellige sider.
 
 På booking-siden viste WAVE 0 errors og 0 contrast errors, men 1 alert om manglende h1. "Vælg café" blev derfor ændret fra h2 til h1, og caféernes overskrifter fra h3 til h2, så headingstrukturen passer til den nye selvstændige side.
+
+### Optimering af LCP på Alle spil
+
+Ved test af siden Alle spil i Lighthouse fik siden en Performance-score på 83 og en LCP på 4,7 sek.
+
+![LCP før optimering](dokumentation/lcp-før.png)
+
+Billederne var allerede hentet ned og lå lokalt i projektet. Jeg fandt dog ud af, at oplysningerne om spillene stadig blev hentet fra GitHub gennem `games.json`. Spillekortene bliver først lavet med JavaScript, når disse data er hentet, og derfor kunne det forsinke, hvornår Matador-billedet blev vist på siden.
+
+Jeg hentede derfor `games.json` ned og lagde den lokalt i projektet. Jeg preloadede også Matador-billedet i `spil.html`, så browseren kan begynde at hente det tidligere.
+
+Efter ændringerne steg Performance-scoren fra 83 til 95, og LCP faldt fra 4,7 sek. til 2,9 sek.
+
+![LCP efter optimering](dokumentation/lcp-efter.png)
