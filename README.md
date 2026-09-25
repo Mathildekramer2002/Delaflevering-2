@@ -813,3 +813,10 @@ Jeg hentede derfor `games.json` ned og lagde den lokalt i projektet. Jeg preload
 Efter ændringerne steg Performance-scoren fra 83 til 95, og LCP faldt fra 4,7 sek. til 2,9 sek.
 
 ![LCP efter optimering](dokumentation/lcp-efter.png)
+
+
+**Opfølgning:**
+
+Ved flere Lighthouse-tests viste det sig, at forbedringen ikke var stabil, og LCP steg igen til omkring 4,5 sek. I min tidligere audit anbefalede Lighthouse `fetchpriority="high"` til Matador-billedet, da dette blev identificeret som LCP-elementet.
+
+Jeg tilføjede derfor `fetchpriority="high"` til Matador-billedet. Efter ændringen testede jeg siden tre gange, hvor Performance lå stabilt på 95 og LCP på 2,9 sek.

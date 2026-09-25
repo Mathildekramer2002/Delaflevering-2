@@ -634,6 +634,8 @@ function gameCard(g, headingLevel = 2) {
   const imageName = g.image.split("/").pop();
   const imageBase = imageName.replace(".webp", "");
   const favActive = FAVS.has(String(g.id)) ? "active" : "";
+  // Giver Matador høj prioritet, da billedet er sidens LCP-element.
+  const imagePriority = g.title === "Matador" ? 'fetchpriority="high"' : "";
   // Fortæller skærmlæseren, om spillet kan tilføjes eller fjernes fra favoritter.
   const favLabel = FAVS.has(String(g.id))
     ? "Fjern fra favoritter"
@@ -653,6 +655,7 @@ function gameCard(g, headingLevel = 2) {
   <img
     src="images/games/${imageBase}-400.webp"
     alt="${escapeHtml(g.title)}"
+    ${imagePriority}
     style="object-fit:contain;"
   >
 </picture>
