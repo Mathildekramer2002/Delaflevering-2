@@ -614,6 +614,39 @@ button:focus-visible,
   outline-offset: 4px;
 }
 
+
+/* Markerer den valgte mulighed i filtermenuen. */
+.filter-submenu button.selected-filter {
+  position: relative;
+  padding-right: 38px;
+}
+
+.filter-submenu button.selected-filter::after {
+  content: "✓";
+  position: absolute;
+  right: 14px;
+  font-weight: 700;
+}
+
+/* Viser de aktive filtre under filterområdet. */
+.active-filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0 20px;
+}
+
+.active-filter-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #96736f;
+  color: #fff8f0;
+  font-size: 13px;
+}
+
 /* Gør bundnavigationen mere kompakt på telefon. */
 @media (max-width: 600px) {
   .tabbar {
@@ -825,6 +858,10 @@ button:focus-visible,
     #popular-games .card {
       flex: 0 0 145px;
     }
+
+        .active-filter-tags {
+          display: none;
+        }
 }
 
 /* Besked når brugeren ikke har nogen favoritter. */

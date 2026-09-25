@@ -689,3 +689,32 @@ Forsiden er desuden gjort responsiv. På mindre skærme skjules billederne i gen
 - "Book bord" åbner det eksisterende booking-flow.
 - Populære spil vises og kan åbnes med både mus og tastatur.
 - Layoutet er testet på både små og store skærme.
+
+### Tydelig visning af valgte filtre
+
+I delaflevering 1 viste Gangstertesten, at det ikke var tydeligt, hvilke filtre brugeren havde valgt. Det gjorde det sværere at bevare overblikket over den aktive filtrering. Derfor blev det vurderet, at de valgte filtre skulle gøres mere synlige, blandt andet ved hjælp af aktive filter-tags.
+
+For at løse problemet er der tilføjet visuel markering af de valgte filtre. På større skærme vises de aktive filtre som små tags under filterområdet, så brugeren hele tiden kan se, hvilke valg der påvirker spiloversigten. Inde i filtermenuen markeres de valgte muligheder samtidig med et flueben.
+
+Filterfunktionen er desuden udvidet, så det er muligt at vælge flere muligheder inden for kategori, spillere og varighed. Det gør det eksempelvis muligt at vælge flere kategorier eller spillerintervaller på samme tid. Et aktivt valg kan fjernes igen ved at trykke på det på ny. Alder fungerer fortsat som ét valg ad gangen, da flere aldersgrænser samtidig ikke giver samme værdi for filtreringen.
+
+![Flere valgte filtre på stor skærm](dokumentation/flere-tags-stor.png)
+
+*På større skærme vises flere aktive filtre som tags under filterområdet.*
+
+På mindre skærme er løsningen tilpasset, så de aktive tags ikke optager ekstra plads i spiloversigten. I stedet vises et flueben ud for hver valgt mulighed, når filtermenuen åbnes. Brugeren kan dermed stadig se flere aktive valg, uden at mobilvisningen bliver mere fyldt.
+
+![Flere valgte filtre på lille skærm](dokumentation/flere-tags-lille.png)
+
+*På mindre skærme markeres de valgte filtre med flueben i filtermenuen.*
+
+Markeringerne opdateres automatisk, når brugeren vælger eller fravælger et filter. Funktionen er også koblet sammen med "RYD FILTRE", så både de aktive filtre, tags og flueben fjernes, når filtrene nulstilles.
+
+**Test efter ændringer:**
+- Flere filtre inden for samme kategori kan være aktive samtidig.
+- De valgte filtre markeres korrekt med flueben i filtermenuen.
+- På større skærme vises de aktive filtre også som tags.
+- Et aktivt filter kan fravælges igen ved at vælge det på ny.
+- Spiloversigten opdateres efter kombinationen af de valgte filtre.
+- På mobil skjules tags, mens fluebenene fortsat viser de aktive valg.
+- "RYD FILTRE" fjerner alle aktive filtre og deres visuelle markeringer.

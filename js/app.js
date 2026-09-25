@@ -75,6 +75,13 @@ let GAMES = [];
 let SHOW_FAVS = false;
 let FAVS = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"));
 
+// Gemmer de filtre, hvor brugeren kan vælge flere muligheder.
+const MULTI_FILTERS = {
+  genre: new Set(),
+  players: new Set(),
+  duration: new Set(),
+};
+
 // Gemmer det element der havde fokus, inden en modal åbnes, så fokus kan sendes tilbage til samme sted, når modalen lukkes.
 let lastFocusedElement = null;
 
@@ -127,43 +134,43 @@ function bindEvents() {
 
   // Klik i grid: ❤️ eller åbn modal
   [els.list, els.popularGames].forEach((list) => {
-  list?.addEventListener("click", (e) => {
-    // Toggle fav
-    const favBtn = e.target.closest("button.fav[data-fav-id]");
-    if (favBtn) {
-      e.stopPropagation();
-      const id = String(favBtn.dataset.favId).trim();
-      if (FAVS.has(id)) {
-        FAVS.delete(id);
-        favBtn.classList.remove("active");
-        favBtn.setAttribute("aria-label", "Tilføj til favoritter");
+    list?.addEventListener("click", (e) => {
+      // Toggle fav
+      const favBtn = e.target.closest("button.fav[data-fav-id]");
+      if (favBtn) {
+        e.stopPropagation();
+        const id = String(favBtn.dataset.favId).trim();
+        if (FAVS.has(id)) {
+          FAVS.delete(id);
+          favBtn.classList.remove("active");
+          favBtn.setAttribute("aria-label", "Tilføj til favoritter");
 
-        // Giver skærmlæseren besked om, at spillet er fjernet.
-        const feedback = document.getElementById("filter-feedback");
-        if (feedback) {
-          feedback.textContent = "Fjernet fra favoritter";
-        }
-      } else {
-        FAVS.add(id);
-        favBtn.classList.add("active");
-        favBtn.setAttribute("aria-label", "Fjern fra favoritter");
+          // Giver skærmlæseren besked om, at spillet er fjernet.
+          const feedback = document.getElementById("filter-feedback");
+          if (feedback) {
+            feedback.textContent = "Fjernet fra favoritter";
+          }
+        } else {
+          FAVS.add(id);
+          favBtn.classList.add("active");
+          favBtn.setAttribute("aria-label", "Fjern fra favoritter");
 
-        // Giver skærmlæseren besked om, at spillet er tilføjet.
-        const feedback = document.getElementById("filter-feedback");
-        if (feedback) {
-          feedback.textContent = "Tilføjet til favoritter";
+          // Giver skærmlæseren besked om, at spillet er tilføjet.
+          const feedback = document.getElementById("filter-feedback");
+          if (feedback) {
+            feedback.textContent = "Tilføjet til favoritter";
+          }
         }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify([...FAVS]));
+        updateFavTabCounter();
+        if (SHOW_FAVS) render();
+        return;
       }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify([...FAVS]));
-      updateFavTabCounter();
-      if (SHOW_FAVS) render();
-      return;
-    }
-    // Åbn modal
-    const card = e.target.closest(".card[data-id]");
-   if (card) openModalById(card.dataset.id);
+      // Åbn modal
+      const card = e.target.closest(".card[data-id]");
+      if (card) openModalById(card.dataset.id);
+    });
   });
-});
 
   // Tabbar
   els.tabAll?.addEventListener("click", () => {
@@ -254,6 +261,20 @@ function bindEvents() {
 }
 
 function setFilter(type, rawValue) {
+  // Kategori, spillere og varighed kan have flere aktive valg.
+  if (type === "genre" || type === "players" || type === "duration") {
+    const selected = MULTI_FILTERS[type];
+
+    if (rawValue === "all") {
+      selected.clear();
+    } else if (selected.has(rawValue)) {
+      selected.delete(rawValue);
+    } else {
+      selected.add(rawValue);
+    }
+
+    return true;
+  }
   if (type === "genre") {
     const sel = document.getElementById("genre-select");
     if (!sel) return false;
@@ -291,6 +312,52 @@ function setFilter(type, rawValue) {
   }
 
   return false;
+}
+
+// Viser hvilke filtre brugeren har valgt.
+function updateActiveFilters() {
+  const filterOptions = document.getElementById("filter-options");
+  const tagContainer = document.getElementById("active-filter-tags");
+
+  if (!filterOptions || !tagContainer) return;
+
+  // Fjerner tidligere markeringer.
+  filterOptions.querySelectorAll("[data-filter]").forEach((button) => {
+    button.classList.remove("selected-filter");
+  });
+
+  // Markerer alle valgte filtre med flueben.
+  Object.entries(MULTI_FILTERS).forEach(([type, values]) => {
+    values.forEach((value) => {
+      const button = filterOptions.querySelector(
+        `[data-filter="${type}"][data-value="${value}"]`,
+      );
+
+      button?.classList.add("selected-filter");
+    });
+  });
+
+  // Alder har fortsat kun ét aktivt valg.
+  const age = els.agePill?.value || "all";
+
+  if (age !== "all") {
+    const ageButton = filterOptions.querySelector(
+      `[data-filter="age"][data-value="${age}"]`,
+    );
+
+    ageButton?.classList.add("selected-filter");
+  }
+
+  // Viser de aktive filtre som tags på større skærme.
+  const tags = [];
+
+  filterOptions.querySelectorAll(".selected-filter").forEach((button) => {
+    tags.push(
+      `<span class="active-filter-tag">${button.textContent.trim()}</span>`,
+    );
+  });
+
+  tagContainer.innerHTML = tags.join("");
 }
 
 // Styrer den samlede filtermenu med mus og tastatur.
@@ -388,9 +455,11 @@ function setupFilterMenu() {
         // Gemmer det valgte filter.
         setFilter(type, value);
 
+        // Opdaterer markeringen af de valgte filtre.
+        updateActiveFilters();
+
         // Opdaterer spillelisten med det valgte filter.
         render();
-
         // Lukker filtermenuen efter valget.
         closeFilterMenu();
 
@@ -456,6 +525,12 @@ function clearAllFilters() {
   SHOW_FAVS = false;
   els.tabFav?.classList.remove("active");
 
+  // Rydder filtre med flere valgmuligheder.
+  MULTI_FILTERS.genre.clear();
+  MULTI_FILTERS.players.clear();
+  MULTI_FILTERS.duration.clear();
+  updateActiveFilters();
+
   render();
 
   // Giver skærmlæseren besked om, at filtrene er blevet ryddet.
@@ -494,26 +569,42 @@ function applyFilters(arr, f) {
     ).toLowerCase();
     if (f.query && !text.includes(f.query)) return false;
 
-    if (f.genre !== "all" && g.genre !== f.genre) return false;
+    // Spillet skal passe til mindst én af de valgte kategorier.
+    if (MULTI_FILTERS.genre.size > 0 && !MULTI_FILTERS.genre.has(g.genre)) {
+      return false;
+    }
     if (f.language !== "all" && g.language !== f.language) return false;
     if (f.difficulty !== "all" && g.difficulty !== f.difficulty) return false;
 
     if (f.agePill !== "all" && g.age < Number(f.agePill)) return false;
 
-    if (f.playersPill !== "all") {
-      const [minStr, maxStr] = f.playersPill.split("-");
-      const wantMin = Number(minStr);
-      const wantMax = maxStr?.includes("+") ? 99 : Number(maxStr);
-      const gMin = g.players?.min ?? 1;
-      const gMax = g.players?.max ?? 99;
-      if (gMax < wantMin || gMin > wantMax) return false;
+    // Spillet skal passe til mindst ét af de valgte spillerintervaller.
+    if (MULTI_FILTERS.players.size > 0) {
+      const matchesPlayers = [...MULTI_FILTERS.players].some((value) => {
+        const [minStr, maxStr] = value.split("-");
+        const wantMin = Number(minStr);
+        const wantMax = maxStr?.includes("+") ? 99 : Number(maxStr);
+
+        const gMin = g.players?.min ?? 1;
+        const gMax = g.players?.max ?? 99;
+
+        return !(gMax < wantMin || gMin > wantMax);
+      });
+
+      if (!matchesPlayers) return false;
     }
 
-    if (f.durationPill !== "all") {
-      const [a, b] = f.durationPill.split("-");
-      const from = Number(a);
-      const to = b?.includes("+") ? 10000 : Number(b);
-      if (g.playtime < from || g.playtime > to) return false;
+    // Spillet skal passe til mindst ét af de valgte tidsintervaller.
+    if (MULTI_FILTERS.duration.size > 0) {
+      const matchesDuration = [...MULTI_FILTERS.duration].some((value) => {
+        const [a, b] = value.split("-");
+        const from = Number(a);
+        const to = b?.includes("+") ? 10000 : Number(b);
+
+        return g.playtime >= from && g.playtime <= to;
+      });
+
+      if (!matchesDuration) return false;
     }
 
     if (SHOW_FAVS && !FAVS.has(String(g.id))) return false;
