@@ -223,9 +223,9 @@
 }
 
 .slot.primary {
-    background: var(--brown);
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.2);
+    background: #572018;
+    color: #fff8f0;
+    border: 1px solid #572018;
 }
 
 .booking-type {
@@ -250,18 +250,19 @@
 .booking-btn {
     padding: 12px;
     border-radius: 12px;
-    background: var(--brown);
-    color: #fff;
+    background: #572018;
+    color: #fff8f0;
     border: 0;
     cursor: pointer;
     font-weight: 800;
 }
 
 .booking-summary {
-    background: #fff;
-    border: 1px solid var(--ring);
+    background: #f8f0e7;
+    border: none;
     border-radius: 12px;
     padding: 10px 12px;
+    color: #572018;
 }
 
 .booking-success {

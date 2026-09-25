@@ -211,10 +211,14 @@ function bindEvents() {
   });
 
   els.tabRes?.addEventListener("click", () => {
+    // Skjuler de andre visninger og åbner booking.
+    homeView.hidden = true;
+    gamesView.hidden = true;
+
     setActiveTab(els.tabRes);
     openBooking();
   });
-
+  
   els.tabHome?.addEventListener("click", () => {
     if (!bookingView?.hidden) closeBooking();
 

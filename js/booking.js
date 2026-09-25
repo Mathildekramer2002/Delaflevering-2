@@ -311,12 +311,20 @@ function renderStepConfirm() {
    </div>
 
    <form class="booking-form" id="confirm-form">
-     <input type="text"  name="name"  placeholder="Navn"   required>
-     <input type="tel"   name="phone" placeholder="Mobil"  required>
-     <input type="email" name="email" placeholder="E-mail" required>
-     <textarea name="note" rows="3" placeholder="Kommentar"></textarea>
-     <button class="booking-btn" type="submit">Bekræft booking</button>
-   </form>
+  <label for="booking-name" class="sr-only">Navn</label>
+  <input id="booking-name" type="text" name="name" placeholder="Navn" required>
+
+  <label for="booking-phone" class="sr-only">Mobil</label>
+  <input id="booking-phone" type="tel" name="phone" placeholder="Mobil" required>
+
+  <label for="booking-email" class="sr-only">E-mail</label>
+  <input id="booking-email" type="email" name="email" placeholder="E-mail" required>
+
+  <label for="booking-note" class="sr-only">Kommentar</label>
+  <textarea id="booking-note" name="note" rows="3" placeholder="Kommentar"></textarea>
+
+  <button class="booking-btn" type="submit">Bekræft booking</button>
+</form>
  `;
   document.getElementById("confirm-form").addEventListener("submit", (e) => {
     e.preventDefault();
