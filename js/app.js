@@ -214,8 +214,199 @@ function bindEvents() {
     // ellers ingen handling
   });
 
-  // Dropdown-pill logik (kategori, spillere, alder, varighed + sort)
-  setupDropdownFilters();
+// Starter dropdown til sortering.
+setupDropdownFilters();
+
+// Starter den nye samlede filtermenu.
+setupFilterMenu();
+
+}
+
+
+
+
+
+function setFilter(type, rawValue) {
+  if (type === "genre") {
+    const sel = document.getElementById("genre-select");
+    if (!sel) return false;
+
+    if (rawValue === "all") {
+      sel.value = "all";
+      return true;
+    }
+
+    const opts = Array.from(sel.options);
+    const lower = String(rawValue).toLowerCase();
+
+    let match =
+      opts.find((o) => o.value.toLowerCase() === lower) ||
+      opts.find((o) => o.textContent.toLowerCase() === lower) ||
+      opts.find((o) => o.textContent.toLowerCase().includes(lower));
+
+    sel.value = match ? match.value : "all";
+    return true;
+  }
+
+  if (type === "players") {
+    (els.playersPill || ensureHiddenPill("players-pill")).value = rawValue;
+    return true;
+  }
+
+  if (type === "age") {
+    (els.agePill || ensureHiddenPill("age-pill")).value = rawValue;
+    return true;
+  }
+
+  if (type === "duration") {
+    (els.durationPill || ensureHiddenPill("duration-pill")).value = rawValue;
+    return true;
+  }
+
+  return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Styrer den samlede filtermenu med mus og tastatur.
+function setupFilterMenu() {
+  const filterButton = document.getElementById("filter-main-btn");
+  const filterOptions = document.getElementById("filter-options");
+
+  if (!filterButton || !filterOptions) return;
+
+  const groups = filterOptions.querySelectorAll(".filter-group");
+
+  // Åbner hovedmenuen.
+  function openFilterMenu() {
+    filterOptions.hidden = false;
+    filterButton.setAttribute("aria-expanded", "true");
+  }
+
+  // Lukker alle undermenuer.
+  function closeSubmenus() {
+    groups.forEach((group) => {
+      const button = group.querySelector(".filter-group-btn");
+      const submenu = group.querySelector(".filter-submenu");
+
+      submenu.hidden = true;
+      button.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  // Lukker hele filtermenuen.
+  function closeFilterMenu() {
+    filterOptions.hidden = true;
+    filterButton.setAttribute("aria-expanded", "false");
+    closeSubmenus();
+  }
+
+  // Åbner og lukker hovedmenuen.
+  filterButton.addEventListener("click", () => {
+    const isOpen = filterButton.getAttribute("aria-expanded") === "true";
+
+    if (isOpen) {
+      closeFilterMenu();
+    } else {
+      openFilterMenu();
+    }
+  });
+
+  // Gør kategorierne i filtermenuen interaktive.
+  groups.forEach((group) => {
+    const groupButton = group.querySelector(".filter-group-btn");
+    const submenu = group.querySelector(".filter-submenu");
+    const choices = submenu.querySelectorAll("button");
+
+    function openSubmenu() {
+      // Lukker de andre undermenuer først.
+      groups.forEach((otherGroup) => {
+        if (otherGroup === group) return;
+
+        const otherButton = otherGroup.querySelector(".filter-group-btn");
+        const otherSubmenu = otherGroup.querySelector(".filter-submenu");
+
+        otherSubmenu.hidden = true;
+        otherButton.setAttribute("aria-expanded", "false");
+      });
+
+      submenu.hidden = false;
+      groupButton.setAttribute("aria-expanded", "true");
+    }
+
+    function closeSubmenu() {
+      submenu.hidden = true;
+      groupButton.setAttribute("aria-expanded", "false");
+    }
+
+    // Hover åbner undermenuen for brugere med mus.
+    group.addEventListener("mouseenter", openSubmenu);
+
+    // Enter eller klik åbner samme menu.
+    groupButton.addEventListener("click", () => {
+      const isOpen = groupButton.getAttribute("aria-expanded") === "true";
+
+      if (isOpen) {
+        closeSubmenu();
+      } else {
+        openSubmenu();
+      }
+    });
+
+    // Enter på en filtermulighed vælger filteret.
+    // Et klik på en filtermulighed vælger filteret.
+choices.forEach((choice) => {
+  choice.addEventListener("click", () => {
+    const type = choice.dataset.filter;
+    const value = choice.dataset.value;
+
+    // Gemmer det valgte filter.
+    setFilter(type, value);
+
+    // Opdaterer spillelisten med det valgte filter.
+    render();
+
+    // Lukker filtermenuen efter valget.
+    closeFilterMenu();
+
+    // Sender fokus tilbage til FILTRE efter valget.
+    filterButton.focus();
+  });
+  });
+  });
+
+  // Escape lukker menuen og sender fokus tilbage.
+  filterOptions.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeFilterMenu();
+      filterButton.focus();
+    }
+  });
+
+  // Escape virker også, hvis fokus stadig står på hovedknappen.
+  filterButton.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeFilterMenu();
+    }
+  });
+
+  // Lukker menuen, hvis brugeren klikker udenfor.
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".filter-menu")) {
+      closeFilterMenu();
+    }
+  });
 }
 
 // Marker aktiv tab
@@ -245,7 +436,7 @@ function clearAllFilters() {
   if (els.sort) els.sort.value = "none";
 
   const sortButton = document.getElementById("sort-button");
-  if (sortButton) sortButton.textContent = "Sorter efter ⌄";
+  if (sortButton) sortButton.textContent = "SORTER";
 
   // Vis alle igen (fjern fav-filter)
   SHOW_FAVS = false;
@@ -364,7 +555,7 @@ function render() {
     const badgeAvail = g.available ? `<span class="badge">Ledig</span>` : ``;
 
     return `
-    <article class="card" data-id="${g.id}" tabindex="0">
+    <article class="card" data-id="${g.id}" tabindex="0" role="button" aria-label="${escapeHtml(g.title)}">
      <div class="thumb">
        <picture>
   <source
@@ -378,18 +569,23 @@ function render() {
   >
 </picture>
        <div class="badges">${badgeAvail}</div>
-       <button class="fav ${favActive}" data-fav-id="${
-    g.id
-  }" aria-label="${favLabel}">❤</button>
      </div>
      <h3>${escapeHtml(g.title)}</h3>
      <div class="meta">
-       <span>👥 ${players}</span>
-       <span>⭐ ${rating}</span>
+       <span>
+          <img src="images/profile.svg" alt="">${players}
+       </span>
+
+       <span>
+        <img src="images/star.svg" alt="">${rating}
+        <span>
      </div>
      <div class="extra">
        ${g.shelf ? `<span>Placering: ${escapeHtml(g.shelf)}</span>` : ""}
      </div>
+      <button class="fav ${favActive}" data-fav-id="${
+    g.id
+  }" aria-label="${favLabel}">❤</button>
    </article>
  `;
 }
@@ -535,38 +731,6 @@ function setupDropdownFilters() {
   let floatingMenu = null;
     // Gemmer den knap der åbnede dropdown-menuen, så fokus kan komme tilbage til den efter et valg.
   let activePill = null;
-
-  function setFilter(type, rawValue) {
-    if (type === "genre") {
-      const sel = document.getElementById("genre-select");
-      if (!sel) return false;
-      if (rawValue === "all") {
-        sel.value = "all";
-        return true;
-      }
-      const opts = Array.from(sel.options);
-      const lower = String(rawValue).toLowerCase();
-      let match =
-        opts.find((o) => o.value.toLowerCase() === lower) ||
-        opts.find((o) => o.textContent.toLowerCase() === lower) ||
-        opts.find((o) => o.textContent.toLowerCase().includes(lower));
-      sel.value = match ? match.value : "all";
-      return true;
-    }
-    if (type === "players") {
-      (els.playersPill || ensureHiddenPill("players-pill")).value = rawValue;
-      return true;
-    }
-    if (type === "age") {
-      (els.agePill || ensureHiddenPill("age-pill")).value = rawValue;
-      return true;
-    }
-    if (type === "duration") {
-      (els.durationPill || ensureHiddenPill("duration-pill")).value = rawValue;
-      return true;
-    }
-    return false;
-  }
 
   function openDropdown(dd, pill) {
     closeDropdown();
@@ -717,7 +881,7 @@ document.addEventListener("click", (e) => {
     // Vis den valgte sortering på knappen
     const sortButton = document.getElementById("sort-button");
     if (sortButton) {
-      sortButton.textContent = `${item.textContent} ⌄`;
+      sortButton.textContent = `${item.textContent}`;
     }
 
     render();

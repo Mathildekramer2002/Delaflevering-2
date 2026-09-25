@@ -585,3 +585,61 @@ Efter oprydningen blev siden testet igen med WAVE.
 Søgning, filtrering, sortering og "Ryd filtre" blev samtidig testet efter ændringerne for at kontrollere, at oprydningen ikke havde påvirket de funktioner, der fortsat bruges på siden.
 
 Optimeringen endte derfor med at være anderledes end først foreslået i delaflevering 1. Et label var den rigtige løsning til det synlige søgefelt, mens de øvrige fejl skyldtes overflødige skjulte formularfelter. Her var det mere relevant at fjerne den unødvendige kode end at tilføje labels til felter, som brugeren ikke kunne benytte.
+
+
+### Redesign af siden "Alle spil"
+
+Jeg har arbejdet videre med det visuelle design af siden "Alle spil". Formålet har været at gøre siden mere overskuelig og skabe et mere sammenhængende visuelt udtryk, samtidig med at den eksisterende funktionalitet bevares.
+
+#### Visuelt design
+
+- Den tidligere mørke header er fjernet.
+- Logoet er placeret centralt øverst sammen med overskriften "Alle spil".
+- Søgefeltet er redesignet, så det passer til det nye visuelle udtryk.
+- Farver, knapper og afstande er tilpasset, så siden fremstår mere ensartet.
+- Spilkortenes eksisterende opbygning er bevaret, men farverne er ændret, så kortene passer til det nye design.
+- Emojis på spilkortene er erstattet med ikoner, så udtrykket bliver mere ensartet med resten af brugerfladen.
+- Bundnavigationen er visuelt tilpasset det nye design.
+
+Formålet med de visuelle ændringer er at skabe en tydeligere sammenhæng mellem sidens elementer og gøre brugerfladen mere rolig og overskuelig.
+
+#### Filter og sortering
+
+De tidligere separate filtre er samlet under én "FILTRE"-knap. Herfra kan brugeren fortsat filtrere spillene efter kategori, antal spillere, alder og varighed.
+
+Jeg valgte at samle filtrene, fordi de tidligere optog meget plads og gjorde området omkring filtreringen uoverskueligt. Ved at samle dem under én knap fylder filtreringen mindre, mens de eksisterende filtermuligheder stadig er tilgængelige.
+
+"Sorter efter" er fortsat placeret separat, da sortering ændrer rækkefølgen på spillene og derfor har en anden funktion end filtrering. "Ryd filtre" er placeret som en mindre knap under sorteringen.
+
+Knapperne er visuelt tilpasset hinanden og har fået samme enkle hover-effekt.
+
+#### Funktionalitet efter ændringerne
+
+Efter opbygningen af filterområdet blev ændret, blev JavaScript tilpasset, så filtreringen fortsat fungerer med den nye menu.
+
+Jeg har efterfølgende testet:
+- søgning
+- de forskellige filtre
+- sortering
+- ryd filtre
+- åbning af spilkort
+- favoritter
+- bundnavigation
+
+Funktionerne virker fortsat efter ændringerne.
+
+#### Responsivt design
+
+Det tidligere optimerede mobile layout med to spilkort pr. række er bevaret. Den nye filtermenu er tilpasset mindre skærme, så undermenuerne vises under hinanden frem for ud til siden.
+
+Jeg har kontrolleret siden i mobilvisning for at sikre, at det nye design og filtermenuen fortsat fungerer på mindre skærme.
+
+#### Eftertest med VoiceOver
+
+Efter ændringerne testede jeg siden med VoiceOver for at kontrollere, at funktionerne fortsat kunne forstås og betjenes med skærmlæser.
+
+Søgefelt, filtrering, sortering, ryd filtre og navigation fungerede med VoiceOver.
+
+Under testen opdagede jeg dog, at VoiceOver kunne fokusere på spilkortene, men ikke fortalte, hvilket spil det enkelte kort repræsenterede. Derfor tilføjede jeg spillets titel som `aria-label` på kortet.
+
+Jeg tilføjede også `role="button"`, da hele spilkortet kan aktiveres for at åbne information om spillet. Efter ændringen læser VoiceOver spillets navn op og fortæller, at elementet fungerer som en knap.

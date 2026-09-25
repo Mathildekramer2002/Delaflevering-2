@@ -3,11 +3,11 @@
   ========================================================= */
 :root {
   --cream: #f5ebdc;
-  --brown: #41120c;
+  --brown: #F6EFE9;
   --brown-2: #5b2a1a;
   --text: #2b1a14;
   --light: #fff8f0;
-  --muted: #bdaaa1;
+  --muted: #4a1c167b;
   --ring: #d9c9bf;
   --shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   --radius: 18px;
@@ -31,61 +31,32 @@ body {
   font: 16px/1.4 ui-sans-serif, system-ui, Segoe UI, Roboto, Inter;
 }
 
-/* =========================================================
-  HEADER – mørk topbjælke + svævende logo
-  ========================================================= */
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 3000;
-  background: var(--cream);
-  padding-top: 100px;
-  /* plads til logoet ovenfor bjælken */
-  padding-bottom: 28px;
-  /* luft under bjælken (afstand til søg) */
-  margin: 0 0 16px;
-  overflow: visible;
-}
-
-/* Selve bjælken: absolut, så padding ikke skubber den */
-.topbar-bar {
-  position: absolute;
-  inset: 0 auto auto 0;
-  height: 68px;
-  width: 100%;
-  background: var(--brown);
-  border-bottom-left-radius: 16px;
-  border-bottom-right-radius: 16px;
-  box-shadow: var(--shadow);
-}
-
-/* Logoet svæver ovenpå bjælken */
-.header-logo {
-  position: absolute;
-  left: 50%;
-  top: 6px;
-  /* sænk/hæv logoet i bjælken */
-  transform: translateX(-50%);
-  height: 96px;
-  /* logo-størrelse */
-  z-index: 10;
-}
-
-/* tilbage-knap i topbaren */
-.icon-btn {
-  appearance: none;
-  border: 0;
-  background: transparent;
-  font-size: 20px;
-  color: #fff;
-  line-height: 1;
-  padding: 4px 6px;
-  cursor: pointer;
-}
 
 /* =========================================================
   SIDE-INDHOLD
   ========================================================= */
+
+    /* Overskrift på siden med alle spil */
+    .games-heading {
+      text-align: center;
+      margin-bottom: 38px;
+    }
+  
+    .games-heading img {
+      width: 105px;
+      height: auto;
+      display: block;
+      margin: 0 auto 20px;
+    }
+  
+    .games-heading h1 {
+      margin: 0;
+      color: #1f1f1f;
+      font-size: 38px;
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+
 .page {
   padding: 12px 14px 110px;
   /* ekstra bund-padding så tabbar ikke dækker */
@@ -93,17 +64,20 @@ body {
   margin: 0 auto;
 }
 
-/* Søg-bar */
+/* Søgefelt på siden med alle spil */
 .searchbar {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #fff;
-  border: 1px solid var(--ring);
-  box-shadow: var(--shadow);
+
+  background: transparent;
+  border: 1px solid #8f6962;
+  box-shadow: none;
   border-radius: 999px;
-  padding: 8px 12px;
-  margin: 10px 0 8px;
+
+  padding: 8px 16px;
+  margin: 0 0 20px;
+  min-height: 42px;
 }
 
 .searchbar input {
@@ -114,61 +88,69 @@ body {
   font-size: 16px;
 }
 
-/* =========================================================
-  FILTRE under søg – venstre/scroll, “Ryd filtre” til højre
-  ========================================================= */
+
+       /* Holder FILTRE og SORTER på samme linje. */
 .filterbar {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 10px 0 14px;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
-.filterbar .filters-row {
-  flex: 1 1 auto;
-  min-width: 0;
+/* FILTRE og SORTER har samme størrelse og udseende. */
+.filter-main-btn,
+.filter-actions .pill {
+  width: 130px;
+  height: 48px;
+  padding: 0 16px;
+
+  border: none;
+  border-radius: 999px;
+  background: #cbbab3;
+  color: #572018;
+
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+
   display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  overflow-y: visible;
-  padding: 10px; 
+  align-items: center;
+  justify-content: center;
 }
 
-/* Holder sortering og ryd filtre ved siden af hinanden */
+/* Holder SORTER og Ryd filtre oven på hinanden. */
 .filter-actions {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
-  padding: 10px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
 }
 
-/* Standard “pill”-stil (bruges også i dropdown-trigger-knapper) */
-.pill {
-  appearance: none;
-  background: #65301e;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+/* Den mindre knap under SORTER. */
+.clear-pill {
+  width: auto;
+  min-height: 0;
+  padding: 7px 14px;
+
+  border: none;
   border-radius: 999px;
-  padding: 10px 16px;
-  /* lidt større */
-  font-weight: 600;
-  white-space: nowrap;
+  background: #572018;
+  color: #fff;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
-  transition: transform 0.18s ease, background-color 0.18s ease,
-    box-shadow 0.18s ease;
-  will-change: transform;
-  transform-origin: center;
 }
 
-.pill:hover,
-.pill:focus-visible,
-.pill:active {
-  transform: scale(1.07);
-  background: var(--brown-2);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+/* Enkel hover på de tre filterknapper. */
+.filter-main-btn:hover,
+#sort-button:hover,
+.clear-pill:hover {
+  transform: scale(1.08);
 }
-
 
 /* Dropdown trigger-pills lys stil */
 .filter-dropdown {
@@ -176,17 +158,6 @@ body {
   flex-shrink: 0;
 }
 
-.filter-dropdown .pill {
-  background: var(--brown);
-  color: var(--ring);
-  border: 1px solid rgba(0, 0, 0, 0.25);
-}
-
-.filter-dropdown .pill:hover {
-  background: var(--brown-2);
-  transform: scale(1.07);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
-}
 
 /* Dropdown-menu */
 .dropdown-menu {
@@ -237,26 +208,6 @@ body {
   color: #fff;
 }
 
-/* “Ryd filtre”-pillen på højre side */
-.clear-pill {
-  flex: 0 0 auto;
-  background: var(--brown);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 999px;
-  padding: 10px 16px;
-  font-weight: 800;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.clear-pill:hover {
-  transform: scale(1.08);
-  background: var(--brown-2);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
-}
 
 /* Skjuler indhold visuelt, men gør det stadig tilgængeligt for skærmlæsere. */
 .sr-only {
@@ -299,66 +250,93 @@ body {
   }
 }
 
+/* Spillekort */
 .card {
-  background: var(--brown);
-  color: #fff;
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  padding: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #f8f0e7;
+  color: #572018;
+  border-radius: 18px;
+  padding: 12px;
+  border: none;
+  box-shadow: 0 6px 10px rgba(87, 32, 24, 0.28);
+  position: relative;
 }
 
+/* Ramme omkring spilbilledet */
 .thumb {
   position: relative;
-  border-radius: 12px;
+  border-radius: 18px;
   overflow: hidden;
-  background: #00000055;
-  aspect-ratio: var(--thumb-ratio);
+  background: #cbbab3;
+  aspect-ratio: 1 / 1;
+  padding: 12px;
 }
 
 .thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
+  border-radius: 12px;
 }
 
+/* Favoritknap oven på spilbilledet */
 .fav {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #fff;
-  border-radius: 999px;
-  padding: 6px 8px;
-  font-size: 16px;
+  bottom: 14px;
+  right: 14px;
+  background: #ffffff00;
+  border: 2px solid #572018;
+  color: #d9c9bf;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font-size: 22px;
+  line-height: 1;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .fav.active {
-  background: #fff;
-  color: #c0183c;
+  color: #e32626;
 }
 
+/* Spillets titel */
 .card h3 {
-  margin: 8px 4px 6px;
-  font-size: 16px;
+  margin: 12px 4px 6px;
+  font-size: 22px;
+  font-weight: 500;
+  color: #572018;
 }
 
-.meta,
-.extra {
-  color: #f1dfd6;
-  opacity: 0.95;
+/* Antal spillere og rating */
+.meta {
   display: flex;
-  gap: 10px;
-  margin: 0 4px 4px;
-  font-size: 14px;
-}
-
-.extra {
   flex-direction: column;
   gap: 2px;
+  margin: 0 4px;
+  color: #572018;
+  font-size: 17px;
+}
+
+.meta span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.meta img {
+  width: 22px;
+  height: 22px;
+}
+
+/* Spillets placering i caféen */
+.extra {
+  margin: 4px 4px 6px;
+  color: #572018;
+  font-size: 16px;
 }
 
 .badges {
@@ -379,84 +357,71 @@ body {
 }
 
 /* =========================================================
-  TABBAR – altid klikbar, hover-effekt, alle lige store
-  ========================================================= */
+   BUNDNAVIGATION
+   ========================================================= */
+
 .tabbar {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 8000;
-  /* OVER alt almindeligt indhold/booking */
-  background: #efd8c6e6;
-  backdrop-filter: saturate(1.2) blur(6px);
-  border-top: 1px solid #e2cfc3;
+
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  padding: 10px 8px;
-  /* lidt større samlet højde */
+
+  background: #f8f0e7;
+  border-top: 1px solid #e4d6ce;
+  padding: 14px 8px 12px;
 }
 
-/* Gør ALLE knapper ens (inkl. huset) */
+/* De fem punkter i bundnavigationen */
 .tabbar button {
   appearance: none;
   border: 0;
   background: transparent;
-  color: #7b5647;
-  text-align: center;
+  color: #572018;
+  cursor: pointer;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  padding: 10px 4px;
-  /* lidt større */
-  font-size: 15px;
-  /* større tekst */
-  outline: 0;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform 0.18s ease, background-color 0.18s ease,
-    color 0.18s ease, box-shadow 0.18s ease;
-  border-radius: 12px;
-  /* rundet baggrund ved hover */
+  gap: 6px;
+
+  padding: 4px;
+  font-family: inherit;
+  border-radius: 10px;
+
+  transition: transform 0.18s ease, background-color 0.18s ease;
 }
 
-/* Ikon + label */
-.tabbar button span {
-  font-size: 20px;
-  line-height: 1;
+/* Ikoner i bundnavigationen */
+.tabbar button img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  display: block;
 }
 
+/* Teksten under ikonerne */
 .tabbar button small {
   display: block;
-  font-size: 12px;
+  font-size: 14px;
+  color: #572018;
 }
 
-/* Aktiv tilstand */
+/* Gør det tydeligt hvilket punkt der er valgt */
 .tabbar .tab.active {
-  color: #3b2118;
   font-weight: 700;
 }
 
-.tabbar .tab.active::after {
-  content: "";
-  width: 24px;
-  height: 3px;
-  background: #3b2118;
-  border-radius: 999px;
-  margin-top: 4px;
-}
-
-/* Konsistent hover/focus på ALLE knapper inkl. huset */
+/* Lille effekt ved mus og tastatur */
 .tabbar button:hover,
-.tabbar button:focus-visible,
-.tabbar button:active {
-  transform: scale(1.08);
-  background: rgba(0, 0, 0, 0.05);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+.tabbar button:focus-visible {
+  transform: scale(1.05);
+  background: rgba(87, 32, 24, 0.06);
 }
-
-
 /* Sørg for at modaler fortsat ligger OVER tabbaren */
 .modal {
   z-index: 9000;
@@ -635,4 +600,146 @@ button:focus-visible,
 .searchbar:focus-within {
   outline: 3px dashed #e00000;
   outline-offset: 4px;
+}
+
+/* Gør bundnavigationen mere kompakt på telefon. */
+@media (max-width: 600px) {
+  .tabbar {
+    padding: 8px 4px 7px;
+  }
+
+  .tabbar button {
+    gap: 3px;
+    padding: 3px 2px;
+  }
+
+  .tabbar button img {
+    width: 25px;
+    height: 25px;
+  }
+
+  .tabbar button small {
+    font-size: 11px;
+  }
+}
+
+   /* NY FILTERMENU */
+
+/* Holder filterknappen og dropdown-menuen samlet */
+.filter-menu {
+  position: relative;
+}
+
+/* Gør det muligt at placere filterikonet uden at påvirke teksten. */
+.filter-main-btn {
+  position: relative;
+}
+
+/* Placérer ikonet til venstre, så FILTRE kan stå præcist i midten. */
+.filter-main-btn span {
+  position: absolute;
+  left: 14px;
+}
+
+/* Første dropdown med Kategori, Spillere, Alder og Varighed */
+.filter-options {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 9000;
+
+  min-width: 190px;
+  padding: 8px;
+
+  background: #f8f0e7;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(87, 32, 24, 0.25);
+}
+
+/* Sørger for at hidden faktisk skjuler menuen */
+.filter-options[hidden],
+.filter-submenu[hidden] {
+  display: none;
+}
+
+/* Hver filterkategori */
+.filter-group {
+  position: relative;
+}
+
+/* Kategori, Spillere, Alder og Varighed */
+.filter-group-btn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border: none;
+  background: transparent;
+  color: #572018;
+
+  padding: 10px 12px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Undermenuen med selve valgene */
+.filter-submenu {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 6px);
+  z-index: 9001;
+
+  min-width: 180px;
+  padding: 8px;
+
+  background: #f8f0e7;
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(87, 32, 24, 0.25);
+}
+
+/* Knapperne inde i undermenuerne */
+.filter-submenu button {
+  display: block;
+  width: 100%;
+
+  border: none;
+  background: transparent;
+  color: #572018;
+
+  padding: 9px 12px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.filter-group-btn:hover,
+.filter-submenu button:hover {
+  background: rgba(87, 32, 24, 0.08);
+  border-radius: 8px;
+}
+
+/* På små skærme åbner filterets undermenu nedad
+   i stedet for ud mod højre. */
+@media (max-width: 600px) {
+  .filter-options {
+    width: 190px;
+  }
+
+  .filter-submenu {
+    position: static;
+    min-width: 0;
+    width: 100%;
+    margin-top: 4px;
+    padding: 4px 0 8px 12px;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  /* Gør valgene lidt mindre end hovedkategorierne. */
+  .filter-submenu button {
+    padding: 8px 10px;
+    font-size: 15px;
+  }
 }
