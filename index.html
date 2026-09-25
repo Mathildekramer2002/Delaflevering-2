@@ -283,18 +283,17 @@
 
       <!-- Skjult lager til select/inputs som koden bruger (ikke synligt for brugeren) -->
       <div class="filters-storage" hidden>
-        <select id="genre-select">
+        <select id="genre-select" aria-label="Kategori">
           <option value="all">Alle kategorier</option>
         </select>
-        <select id="language-select">
+      <select id="language-select" aria-label="Sprog">
           <option value="all">Alle sprog</option>
         </select>
-        <select id="difficulty-select">
+        <select id="difficulty-select" aria-label="Sværhedsgrad">
           <option value="all">Alle sværhedsgrader</option>
         </select>
     
-      
-        <select id="sort-select">
+        <select id="sort-select" aria-label="Sortering">
           <option value="none">Ingen sortering</option>
           <option value="title">Titel (A-Å)</option>
           <option value="playtime">Varighed (kortest først)</option>
@@ -317,7 +316,7 @@
     </div>
 
     <div class="modal-body">
-      <h2 id="modal-title"></h2>
+      <h2 id="modal-title">Spildetaljer</h2>
       <div class="modal-meta" id="modal-meta"></div>
       <p id="modal-desc"></p>
       <div class="modal-details" id="modal-details"></div>
@@ -361,9 +360,6 @@
     </button>
   </nav>
 
-
-
-    <footer class="legal">© Spilcaféen</footer>
 
   <script src="js/booking.js"></script>
   <script src="js/app.js"></script>

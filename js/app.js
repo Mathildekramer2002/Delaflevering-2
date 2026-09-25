@@ -677,6 +677,9 @@ function openModalById(id) {
   mImg.src = g.image;
   mImg.alt = g.title;
 
+  // Viser spillets navn i modalvinduet.
+  mTitle.textContent = g.title;
+
   // Viser de vigtigste informationer om spillet.
   mMeta.innerHTML = [
     Number.isFinite(g.rating)

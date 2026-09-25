@@ -26,7 +26,7 @@ body {
 
 /* baggrundsfarve */
 body {
-  background: var(--cream);
+  background:#e4d4c3;
   color: var(--text);
   font: 16px/1.4 ui-sans-serif, system-ui, Segoe UI, Roboto, Inter;
 }
@@ -284,9 +284,9 @@ body {
   position: absolute;
   bottom: 14px;
   right: 14px;
-  background: #ffffff00;
+  background: #572018;
   border: 2px solid #572018;
-  color: #d9c9bf;
+  color: #ffffff;
   border-radius: 50%;
   width: 34px;
   height: 34px;
@@ -927,7 +927,7 @@ button:focus-visible,
 
 /* Book bord */
 .home-booking {
-  background: #96736f;
+  background: #6f534f;
 }
 
 /* Ikon i venstre side */
@@ -967,7 +967,7 @@ button:focus-visible,
 }
 
 #home-games-button {
-  background: #96736f;
+  background: #6f534f;
   color: #fff8f0;
 }
 
