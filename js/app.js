@@ -731,8 +731,11 @@ function openModalById(id) {
   // Gemmer det kort brugeren står på, så fokus kan komme tilbage hertil bagefter.
   lastFocusedElement = document.activeElement;
 
-  // Billede
-  mImg.src = g.image;
+  // Bruger den lokale 400 px-version af spilbilledet i modalvinduet.
+  const imageName = g.image.split("/").pop();
+  const imageBase = imageName.replace(".webp", "");
+
+  mImg.src = `images/games/${imageBase}-400.webp`;
   mImg.alt = g.title;
 
   // Viser spillets navn i modalvinduet.
